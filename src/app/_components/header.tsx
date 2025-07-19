@@ -9,8 +9,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Input } from "../../components/ui/input"
 import Link from "next/link";
 import categories from "@/datalocals/categories";
+import React, { useState } from "react";
+import MenuMobile from "./menu-mobile";
 
 export function Header() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     return (
         <header className="flex flex-col items-center shadow-sm">
             {/* Top Bar */}
@@ -39,7 +43,7 @@ export function Header() {
             <div className="w-full container">
                 <div className="flex justify-between items-center p-4">
                     {/* Menu */}
-                    <button className="w-[67px] xl:hidden">
+                    <button className="w-[67px] xl:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                         <MenuIcon fontSize="large" />
                     </button>
 
@@ -108,7 +112,7 @@ export function Header() {
 
                                 {/* Main navigation */}
                                 <div className="normal-case absolute top-full left-0 w-screen max-w-7xl bg-white shadow-2xl border-t-2 border-green-500 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                                    <div className={`grid grid-cols-${categories.length} gap-0`}>
+                                    <div className="grid grid-cols-6 gap-0">
                                         {categories.slice(0, 6).map((category, index) => (
                                             <div
                                                 key={category.slug}
@@ -116,7 +120,7 @@ export function Header() {
                                             >
                                                 <Link
                                                     href={`/products?category=${category.slug}`}
-                                                    className="font-semibold text-green-700 hover:text-green-800 mb-4 text-md flex items-center"
+                                                    className="font-semibold text-green-700 hover:text-green-800 mb-4 text-lg flex items-center"
                                                 >
                                                     {category.icon && (
                                                         <img src={category.icon} alt={category.name} className="w-6 h-6 mr-2" />
@@ -128,7 +132,7 @@ export function Header() {
                                                         <div key={sub.slug}>
                                                             <Link
                                                                 href={`/products?category=${category.slug}&sub=${sub.slug}`}
-                                                                className="block font-medium text-gray-700 hover:text-green-600 mb-2 text-sm"
+                                                                className="block font-medium text-gray-700 hover:text-green-600 mb-2 text-md"
                                                             >
                                                                 {sub.name}
                                                             </Link>
@@ -137,7 +141,7 @@ export function Header() {
                                                                     <li key={itemIndex}>
                                                                         <Link
                                                                             href={`/products?search=${encodeURIComponent(item)}`}
-                                                                            className="block text-xs text-gray-500 hover:text-green-600 py-1"
+                                                                            className="block text-sm text-gray-500 hover:text-green-600 py-1"
                                                                         >
                                                                             {item}
                                                                         </Link>
@@ -179,7 +183,7 @@ export function Header() {
                     </div>
                 </div>
             </nav>
-
+            <MenuMobile isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </header>
     )
 }
