@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Input } from "../../components/ui/input"
 import Link from "next/link";
+import categories from "@/datalocals/categories";
 
 export function Header() {
     return (
@@ -106,8 +107,59 @@ export function Header() {
                                 </button>
 
                                 {/* Main navigation */}
-                                <div className="absolute ">
-
+                                <div className="normal-case absolute top-full left-0 w-screen max-w-7xl bg-white shadow-2xl border-t-2 border-green-500 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                                    <div className={`grid grid-cols-${categories.length} gap-0`}>
+                                        {categories.slice(0, 6).map((category, index) => (
+                                            <div
+                                                key={category.slug}
+                                                className="p-6 border-r border-gray-100 last:border-r-0 hover:bg-green-50 transition-colors"
+                                            >
+                                                <Link
+                                                    href={`/products?category=${category.slug}`}
+                                                    className="font-semibold text-green-700 hover:text-green-800 mb-4 text-md flex items-center"
+                                                >
+                                                    {category.icon && (
+                                                        <img src={category.icon} alt={category.name} className="w-6 h-6 mr-2" />
+                                                    )}
+                                                    {category.label}
+                                                </Link>
+                                                <div className="space-y-3">
+                                                    {category.subCategories.slice(0, 5).map((sub) => (
+                                                        <div key={sub.slug}>
+                                                            <Link
+                                                                href={`/products?category=${category.slug}&sub=${sub.slug}`}
+                                                                className="block font-medium text-gray-700 hover:text-green-600 mb-2 text-sm"
+                                                            >
+                                                                {sub.name}
+                                                            </Link>
+                                                            <ul className="space-y-1">
+                                                                {sub.items.slice(0, 4).map((item, itemIndex) => (
+                                                                    <li key={itemIndex}>
+                                                                        <Link
+                                                                            href={`/products?search=${encodeURIComponent(item)}`}
+                                                                            className="block text-xs text-gray-500 hover:text-green-600 py-1"
+                                                                        >
+                                                                            {item}
+                                                                        </Link>
+                                                                    </li>
+                                                                ))}
+                                                                {sub.items.length > 4 && (
+                                                                    <li>
+                                                                        <Link
+                                                                            href={`/products?category=${category.slug}&sub=${sub.slug}`}
+                                                                            className="block text-xs text-green-600 hover:text-green-700 py-1 font-medium"
+                                                                        >
+                                                                            Xem thêm ({sub.items.length - 4}+)
+                                                                        </Link>
+                                                                    </li>
+                                                                )}
+                                                            </ul>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 
