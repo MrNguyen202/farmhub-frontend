@@ -92,30 +92,35 @@ export function Header() {
                 <div className="container mx-auto px-4">
                     <div className="hidden md:block">
                         <div className="flex items-center gap-2 py-4 uppercase">
-                            <Link href="/" className="px-4 py-2 hover:text-green-600 font-medium">
+                            <Link href="/" className="px-4 py-2 hover:text-green-600 hover:shadow-green-800 hover:shadow-2xl hover:rounded-xl font-medium">
                                 Trang chủ
                             </Link>
-                            <Link href="/products" className="px-4 py-2 hover:text-green-600 font-medium">
+                            <Link href="/products" className="px-4 py-2 hover:text-green-600 hover:shadow-green-800 hover:shadow-2xl hover:rounded-xl font-medium">
                                 Sản phẩm
                             </Link>
 
                             <div className="relative group">
-                                <Button variant="ghost" className="px-4 py-2 text-base uppercase hover:text-green-600 font-medium flex items-center">
+                                <button className="px-4 py-2 text-base uppercase hover:text-green-600 hover:shadow-green-800 hover:shadow-2xl hover:rounded-xl font-medium flex items-center">
                                     Danh mục
                                     <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:rotate-90" />
-                                </Button>
+                                </button>
+
+                                {/* Main navigation */}
+                                <div className="absolute ">
+
+                                </div>
                             </div>
 
-                            <Link href="/about" className="px-4 py-2 hover:text-green-600 font-medium">
+                            <Link href="/about" className="px-4 py-2 hover:text-green-600 hover:shadow-green-800 hover:shadow-2xl hover:rounded-xl font-medium">
                                 Giới thiệu
                             </Link>
-                            <Link href="/contact" className="px-4 py-2 hover:text-green-600 font-medium">
+                            <Link href="/contact" className="px-4 py-2 hover:text-green-600 hover:shadow-green-800 hover:shadow-2xl hover:rounded-xl font-medium">
                                 Liên hệ
                             </Link>
-                            <Link href="/news" className="px-4 py-2 hover:text-green-600 font-medium">
+                            <Link href="/news" className="px-4 py-2 hover:text-green-600 hover:shadow-green-800 hover:shadow-2xl hover:rounded-xl font-medium">
                                 Tin tức
                             </Link>
-                            <Link href="/handbook" className="px-4 py-2 hover:text-green-600 font-medium">
+                            <Link href="/handbook" className="px-4 py-2 hover:text-green-600 hover:shadow-green-800 hover:shadow-2xl hover:rounded-xl font-medium">
                                 Sổ tay mùa vụ
                             </Link>
                         </div>

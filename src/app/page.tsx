@@ -79,7 +79,7 @@ export default function HomePage() {
             <div className="hidden pointer-events-none absolute top-1/2 left-0 w-full h-0.5 bg-gray-300 z-10 md:block lg:hidden" />
             <div className="hidden pointer-events-none absolute top-0 left-1/2 h-full w-0.5 bg-gray-300 z-10 md:block lg:hidden" />
 
-            {categories.map((category, index) => (
+            {categories.slice(0, 4).map((category, index) => (
               <Link key={index} href="/products" className="group flex flex-col items-center">
                 <Card className="overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 w-[90%] h-64 p-0 rounded-xl">
                   <CardContent className="w-full h-full p-0">
