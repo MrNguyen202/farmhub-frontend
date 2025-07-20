@@ -30,7 +30,7 @@ const MenuMobile = ({ isOpen, onClose }: MobileMenuProps) => {
             onClick={onClose}
         >
             <div onClick={(e) => e.stopPropagation()}
-                className={`fixed inset-y-0 left-0 w-[80%] bg-white shadow-xl overflow-y-auto transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+                className={`fixed inset-y-0 left-0 w-[80%] bg-white shadow-xl overflow-y-auto transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"} md:w-[60%] `}
             >
                 <div className="p-4 border-b">
                     <div className="flex items-center justify-between">
