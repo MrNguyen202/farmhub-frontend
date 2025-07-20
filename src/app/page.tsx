@@ -18,7 +18,7 @@ export default function HomePage() {
       <section className="bg-gradient-to-b from-green-600 to-green-800 text-white lg:bg-gradient-to-r">
         <div className='container mx-auto p-10 mb-10 grid place-items-center gap-6 lg:grid-cols-2'>
           <div className='grid grid-cols-1 place-items-center gap-4 lg:place-items-start xl:gap-8'>
-            <div className='flex flex-col items-center text-3xl font-bold lg:items-start xl:text-6xl'>
+            <div className='flex flex-col items-center text-2xl font-bold lg:items-start xl:text-6xl'>
               <h1>Vật Tư Nông Nghiệp</h1>
               <h2 className="text-green-200">Chất lượng cao</h2>
             </div>

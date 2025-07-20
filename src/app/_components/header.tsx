@@ -111,56 +111,66 @@ export function Header() {
                                 </button>
 
                                 {/* Main navigation */}
-                                <div className="normal-case absolute top-full left-0 w-screen max-w-7xl bg-white shadow-2xl border-t-2 border-green-500 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                                    <div className="grid grid-cols-6 gap-0">
+                                <div className="normal-case absolute top-full left-0 w-screen max-w-xs bg-white shadow-2xl border-t-2 border-green-500 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                                    <div className="grid grid-cols-1 gap-0">
                                         {categories.slice(0, 6).map((category, index) => (
                                             <div
                                                 key={category.slug}
-                                                className="p-6 border-r border-gray-100 last:border-r-0 hover:bg-green-50 transition-colors"
+                                                className="relative group/sub px-4 pt-4 border-r border-b border-gray-200 last:border-r-0 hover:bg-green-100 transition-colors"
                                             >
                                                 <Link
                                                     href={`/products?category=${category.slug}`}
-                                                    className="font-semibold text-green-700 hover:text-green-800 mb-4 text-lg flex items-center"
+                                                    className="font-semibold text-green-700 hover:text-green-800 mb-4 text-lg flex items-center justify-between"
                                                 >
-                                                    {category.icon && (
-                                                        <img src={category.icon} alt={category.name} className="w-6 h-6 mr-2" />
+                                                    <div className="flex items-center gap-2">
+                                                        {category.icon && (
+                                                            <img src={category.icon} alt={category.name} className="w-6 h-6" />
+                                                        )}
+                                                        {category.label}
+                                                    </div>
+                                                    {category.subCategories.length > 0 && (
+                                                        <ChevronRight className="w-4 h-4 transition-transform group-hover/sub:rotate-90" />
                                                     )}
-                                                    {category.label}
                                                 </Link>
-                                                <div className="space-y-3">
-                                                    {category.subCategories.slice(0, 5).map((sub) => (
-                                                        <div key={sub.slug}>
-                                                            <Link
-                                                                href={`/products?category=${category.slug}&sub=${sub.slug}`}
-                                                                className="block font-medium text-gray-700 hover:text-green-600 mb-2 text-md"
-                                                            >
-                                                                {sub.name}
-                                                            </Link>
-                                                            <ul className="space-y-1">
-                                                                {sub.items.slice(0, 4).map((item, itemIndex) => (
-                                                                    <li key={itemIndex}>
-                                                                        <Link
-                                                                            href={`/products?search=${encodeURIComponent(item)}`}
-                                                                            className="block text-sm text-gray-500 hover:text-green-600 py-1"
-                                                                        >
-                                                                            {item}
-                                                                        </Link>
-                                                                    </li>
-                                                                ))}
-                                                                {sub.items.length > 4 && (
-                                                                    <li>
-                                                                        <Link
-                                                                            href={`/products?category=${category.slug}&sub=${sub.slug}`}
-                                                                            className="block text-xs text-green-600 hover:text-green-700 py-1 font-medium"
-                                                                        >
-                                                                            Xem thêm ({sub.items.length - 4}+)
-                                                                        </Link>
-                                                                    </li>
-                                                                )}
-                                                            </ul>
+
+                                                {/* Level next */}
+                                                {category.subCategories.length > 0 && (
+                                                    <div className="absolute ml-1 left-full top-1/2 w-screen max-w-xs bg-white shadow-lg border-t-2 border-yellow-500 opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-300">
+                                                        <div className="grid grid-cols-1 gap-0">
+                                                            {category.subCategories.map((subCategory) => (
+                                                                <div className="relative group/subsub px-4 py-2 border-b border-gray-200 hover:bg-green-100 transition-colors" key={subCategory.slug}>
+                                                                    <Link
+                                                                        href={`/products?category=${subCategory.slug}`}
+                                                                        className="text-green-700 hover:text-green-800 flex items-center justify-between gap-2"
+                                                                    >
+                                                                        {subCategory.name}
+                                                                        {subCategory.items.length > 0 && (
+                                                                            <ChevronRight className="w-4 h-4 transition-transform group-hover/subsub:rotate-90" />
+                                                                        )}
+                                                                    </Link>
+
+                                                                    {/* Level next */}
+                                                                    {subCategory.items.length > 0 && (
+                                                                        <div className="absolute ml-1 left-full top-1/2 w-screen max-w-xs bg-white shadow-lg border-t-2 border-yellow-500 opacity-0 invisible group-hover/subsub:opacity-100 group-hover/subsub:visible transition-all duration-300">
+                                                                            <div className="grid grid-cols-1 gap-0">
+                                                                                {subCategory.items.map((item) => (
+                                                                                    <div className="px-4 py-2 border-b border-gray-200 hover:bg-green-100 transition-colors" key={item}>
+                                                                                        <Link
+                                                                                            href={`/products?category=${item}`}
+                                                                                            className="text-green-700 hover:text-green-800"
+                                                                                        >
+                                                                                            {item}
+                                                                                        </Link>
+                                                                                    </div>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            ))}
                                                         </div>
-                                                    ))}
-                                                </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         ))}
                                     </div>
