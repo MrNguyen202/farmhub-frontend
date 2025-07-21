@@ -123,7 +123,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid gap-6 w-full max-w-96 md:max-w-full md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {products.slice(0, 4).map((product) => (
+            {products.slice(0, 12).map((product) => (
               <div key={product.id} className="relative">
                 <Link href={`/products/${product.id}`}>
                   <Card className="group hover:shadow-lg transition-shadow p-0 cursor-pointer">
