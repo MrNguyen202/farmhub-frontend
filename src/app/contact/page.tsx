@@ -23,11 +23,11 @@ export default function ContactPage() {
             {/* Contact Info & Form */}
             <section className="py-16 px-[5%]">
                 <div className="container mx-auto">
-                    <div className="grid lg:grid-cols-2 gap-12">
+                    <div className="grid lg:grid-cols-2 gap-12 h-full">
                         {/* Contact Information */}
-                        <div>
-                            <h2 className="text-3xl font-bold text-gray-800 mb-6">Thông tin liên hệ</h2>
-                            <p className="text-gray-700 leading-relaxed mb-8">
+                        <div className="relative border rounded-lg p-8 shadow-lg md:border-none md:shadow-none md:p-0">
+                            <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">Thông tin liên hệ</h2>
+                            <p className="text-gray-700 leading-relaxed mb-8 text-center md:text-left">
                                 Bạn có bất kỳ câu hỏi nào về sản phẩm, dịch vụ hay cần tư vấn kỹ thuật? Đừng ngần ngại liên hệ với chúng
                                 tôi qua các kênh dưới đây.
                             </p>
@@ -68,7 +68,7 @@ export default function ContactPage() {
                             </div>
 
                             {/* Social Media */}
-                            <div>
+                            <div className="flex flex-col items-center mb-8 md:items-start md:mb-0">
                                 <h3 className="font-semibold text-lg mb-3">Theo dõi chúng tôi</h3>
                                 <div className="flex gap-3">
                                     <Button size="icon" variant="outline" className="rounded-full bg-transparent">
@@ -82,11 +82,17 @@ export default function ContactPage() {
                                     </Button>
                                 </div>
                             </div>
+
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4714.364971970159!2d106.62303097580222!3d10.854617089298957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752a211822e6cf%3A0xd7fdb44c860c4312!2zVMOyYSBuaMOgIFNCSQ!5e1!3m2!1svi!2s!4v1753088055025!5m2!1svi!2s"
+                                className="border-0 w-64 h-64 place-self-center md:absolute bottom-0 right-4 rounded-lg shadow-2xl lg:w-40 lg:h-40 lg:right-0 xl:w-64 xl:h-64 xl:right-4"
+                                loading="lazy"
+                            />
                         </div>
 
                         {/* Contact Form */}
-                        <div>
-                            <Card className="shadow-lg border-0 max-w-sm md:max-w-xl xl:max-w-3xl mx-auto">
+                        <div className="h-full">
+                            <Card className="shadow-lg border max-w-sm md:max-w-xl xl:max-w-3xl mx-auto h-full">
                                 <CardHeader className="pb-4">
                                     <CardTitle className="text-2xl font-bold text-center">Gửi tin nhắn cho chúng tôi</CardTitle>
                                 </CardHeader>
@@ -119,22 +125,6 @@ export default function ContactPage() {
                                 </CardContent>
                             </Card>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Map Section */}
-            <section className="py-16 bg-white px-[5%]">
-                <div className="container mx-auto">
-                    <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">Tìm chúng tôi trên bản đồ</h2>
-                    <div className="rounded-lg overflow-hidden shadow-lg">
-                        <Image
-                            src="/placeholder.svg?height=400&width=1200"
-                            alt="Vị trí cửa hàng trên bản đồ"
-                            width={1200}
-                            height={400}
-                            className="w-full h-96 object-cover"
-                        />
                     </div>
                 </div>
             </section>
