@@ -308,7 +308,7 @@ const ProductPage = () => {
             {/* List sản phẩm */}
             <div className={`grid grid-cols-1 ${viewMode === "grid" ? "md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"} gap-4`}>
               {products.slice((page - 1) * 12, page * 12).map((product) => (
-                <CartProduct key={product.id} product={product} />
+                <CartProduct key={product.id} product={product} viewMode={viewMode} />
               ))}
             </div>
 
