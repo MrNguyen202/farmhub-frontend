@@ -36,7 +36,7 @@ const CartProduct = ({ product }: CartProductProps) => {
                                     e.currentTarget.src = '/placeholder.svg'
                                 }}
                             />
-                            <Badge className="absolute top-4 right-2 bg-red-500">{product.badge}</Badge>
+                            <Badge className="absolute top-4 right-4 md:right-2 bg-red-500">{product.badge}</Badge>
                         </div>
                         <h1 className="font-semibold mb-2 line-clamp-2 text-lg">{product.name}</h1>
                         <div className="flex items-center mb-2">
@@ -63,7 +63,7 @@ const CartProduct = ({ product }: CartProductProps) => {
 
             {/* Button nằm ngoài Link để hoạt động được */}
             <Button
-                className='absolute bottom-2 right-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors w-8 h-8 hover:cursor-pointer'
+                className='absolute bottom-4 right-4 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors w-12 h-12 hover:cursor-pointer xl:bottom-2 xl:right-2 xl:w-8 xl:h-8'
                 onClick={() => alert(`Đã thêm ${product.name} vào giỏ hàng`)}
             >
                 <ShoppingBasketIcon fontSize='medium' />

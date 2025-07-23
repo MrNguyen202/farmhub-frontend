@@ -23,7 +23,8 @@ const MenuMobile = ({ isOpen, onClose }: MobileMenuProps) => {
     const toggleSubcategory = (slug: string) => {
         setOpenSubcategories((prev) => (prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]))
     }
-    // if (!isOpen) return null
+    
+    
     return (
         <div
             className={`fixed inset-0 z-50 xl:hidde bg-opacity-50 transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
@@ -91,11 +92,11 @@ const MenuMobile = ({ isOpen, onClose }: MobileMenuProps) => {
                                                 {sub.items.map((item, index) => (
                                                     <Link
                                                         key={index}
-                                                        href={`/products?search=${encodeURIComponent(item)}`}
+                                                        href={`/products?category=${category.slug}&subcategory=${sub.slug}&item=${item.slug}`}
                                                         className="block py-1 text-gray-500 hover:text-green-600"
                                                         onClick={onClose}
                                                     >
-                                                        {item}
+                                                        {item.name}
                                                     </Link>
                                                 ))}
                                             </CollapsibleContent>
