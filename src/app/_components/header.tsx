@@ -208,9 +208,6 @@ export function Header() {
                             <Link href="/news" className="px-4 py-2 hover:text-green-600 hover:shadow-green-800 hover:shadow-2xl hover:rounded-xl font-medium">
                                 Tin tức
                             </Link>
-                            <Link href="/handbook" className="px-4 py-2 hover:text-green-600 hover:shadow-green-800 hover:shadow-2xl hover:rounded-xl font-medium">
-                                Sổ tay mùa vụ
-                            </Link>
                         </div>
                     </div>
                 </div>
