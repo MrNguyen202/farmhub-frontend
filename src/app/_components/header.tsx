@@ -1,9 +1,10 @@
 "use client"
 
-import { ChevronRight, Mail, Phone, Truck } from "lucide-react"
+import { ChevronRight, LogIn, Mail, NotebookPen, Phone, Truck, UserRoundPen } from "lucide-react"
 import { Button } from "../../components/ui/button"
 import { Badge } from "../../components/ui/badge"
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PersonIcon from '@mui/icons-material/Person';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Input } from "../../components/ui/input"
@@ -11,6 +12,7 @@ import Link from "next/link";
 import categories from "@/datalocals/categories";
 import React, { useState } from "react";
 import MenuMobile from "./menu-mobile";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -76,6 +78,26 @@ export function Header() {
                                 3
                             </Badge>
                         </Button>
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild className="hidden md:block">
+                                <Button variant="ghost" size="sm">
+                                    <PersonIcon fontSize="large" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem asChild>
+                                    <Link href="/auth/login"><LogIn /> Đăng nhập</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link href="/auth/register"><NotebookPen /> Đăng ký</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link href="/account"><UserRoundPen /> Tài khoản</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem> <Truck /> Đơn hàng</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
 

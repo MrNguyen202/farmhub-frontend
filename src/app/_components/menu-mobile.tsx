@@ -4,8 +4,10 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import categories from "@/datalocals/categories";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, LogIn, NotebookPen, Truck, UserRoundPen } from "lucide-react";
 import Link from "next/link";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import PersonIcon from '@mui/icons-material/Person';
 
 interface MobileMenuProps {
     isOpen: boolean
@@ -23,8 +25,8 @@ const MenuMobile = ({ isOpen, onClose }: MobileMenuProps) => {
     const toggleSubcategory = (slug: string) => {
         setOpenSubcategories((prev) => (prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]))
     }
-    
-    
+
+
     return (
         <div
             className={`fixed inset-0 z-50 xl:hidde bg-opacity-50 transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
@@ -42,9 +44,30 @@ const MenuMobile = ({ isOpen, onClose }: MobileMenuProps) => {
                                 <p className="text-lg text-gray-500">Nông Nghiệp</p>
                             </div>
                         </div>
-                        <Button variant="ghost" size="sm" onClick={onClose}>
-                            ✕
-                        </Button>
+                        <div className="flex items-center gap-2">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild className="md:hidden">
+                                    <Button variant="ghost" size="sm">
+                                        <PersonIcon fontSize="large" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem asChild>
+                                        <Link onClick={onClose} href="/auth/login"><LogIn /> Đăng nhập</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                        <Link onClick={onClose} href="/auth/register"><NotebookPen /> Đăng ký</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                        <Link onClick={onClose} href="/account"><UserRoundPen /> Tài khoản</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={onClose}> <Truck /> Đơn hàng</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            <Button variant="ghost" size="sm" onClick={onClose}>
+                                ✕
+                            </Button>
+                        </div>
                     </div>
                 </div>
 
