@@ -176,7 +176,9 @@ export default function HomePage() {
             ))}
           </div>
 
-          <Button className='bg-[#111827] w-auto text-md md:text-lg py-6 md:px-8 md:py-6 hover:cursor-pointer'>Xem tất cả sản phẩm</Button>
+          <Button className='bg-[#111827] w-auto text-md md:text-lg py-6 md:px-8 md:py-6 hover:cursor-pointer'>
+            <Link href="/products">Xem tất cả sản phẩm</Link>
+          </Button>
         </div>
       </section>
 
