@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -45,7 +44,7 @@ export default function NewsPage() {
                     {currentArticles.map((article) => (
                         <Card key={article.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                             <Link href={`/news/${article.slug}`}>
-                                <Image
+                                <img
                                     src={article.image || "/placeholder.svg"}
                                     alt={article.title}
                                     width={600}

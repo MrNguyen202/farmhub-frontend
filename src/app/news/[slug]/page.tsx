@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation"
-import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { CalendarDays, Tag, ArrowLeft } from "lucide-react"
@@ -35,12 +34,11 @@ export default function NewsArticlePage({ params }: { params: { slug: string } }
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{article.title}</h1>
 
                     <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden">
-                        <Image
+                        <img
                             src={article.image || "/placeholder.svg"}
                             alt={article.title}
-                            fill
                             style={{ objectFit: "cover" }}
-                            className="rounded-lg"
+                            className="rounded-lg w-full h-full object-cover"
                         />
                     </div>
 
