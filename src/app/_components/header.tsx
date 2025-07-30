@@ -72,11 +72,13 @@ export function Header() {
 
                     {/* Actions */}
                     <div className="flex justify-between items-center gap-4">
-                        <Button variant="ghost" size="lg" className="relative hover:cursor-pointer">
-                            <ShoppingCartIcon fontSize="large" />
-                            <Badge className="absolute -top-2 right-0 w-5 h-5 rounded-full p-0 flex items-center justify-center text-xs">
-                                3
-                            </Badge>
+                        <Button variant="ghost" size="lg" className="relative hover:cursor-pointer" >
+                            <Link href="/cart">
+                                <ShoppingCartIcon fontSize="large" />
+                                <Badge className="absolute -top-2 right-0 w-5 h-5 rounded-full p-0 flex items-center justify-center text-xs">
+                                    3
+                                </Badge>
+                            </Link>
                         </Button>
 
                         <DropdownMenu>
@@ -166,22 +168,22 @@ export function Header() {
                                                                         className="text-green-700 hover:text-green-800 flex items-center justify-between gap-2"
                                                                     >
                                                                         {subCategory.name}
-                                                                        {subCategory.items.length > 0 && (
+                                                                        {subCategory.types.length > 0 && (
                                                                             <ChevronRight className="w-4 h-4 transition-transform group-hover/subsub:rotate-90" />
                                                                         )}
                                                                     </Link>
 
                                                                     {/* Level next */}
-                                                                    {subCategory.items.length > 0 && (
+                                                                    {subCategory.types.length > 0 && (
                                                                         <div className="absolute ml-1 left-full top-1/2 w-screen max-w-xs bg-white shadow-lg border-t-2 border-yellow-500 opacity-0 invisible group-hover/subsub:opacity-100 group-hover/subsub:visible transition-all duration-300">
                                                                             <div className="grid grid-cols-1 gap-0">
-                                                                                {subCategory.items.map((item) => (
-                                                                                    <div className="px-4 py-2 border-b border-gray-200 hover:bg-green-100 transition-colors" key={item.slug}>
+                                                                                {subCategory.types.map((type) => (
+                                                                                    <div className="px-4 py-2 border-b border-gray-200 hover:bg-green-100 transition-colors" key={type.slug}>
                                                                                         <Link
-                                                                                            href={`/products?category=${category.slug}&subcategory=${subCategory.slug}&item=${item.slug}`}
+                                                                                            href={`/products?category=${category.slug}&subcategory=${subCategory.slug}&item=${type.slug}`}
                                                                                             className="text-green-700 hover:text-green-800"
                                                                                         >
-                                                                                            {item.name}
+                                                                                            {type.name}
                                                                                         </Link>
                                                                                     </div>
                                                                                 ))}

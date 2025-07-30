@@ -95,7 +95,7 @@ export function Footer() {
 
                 <Separator className="bg-gray-700 lg:col-span-2 xl:hidden" />
 
-                <p className="text-gray-300 text-center lg:col-span-2 xl:col-span-3 xl:order-4">&#169; 2024 Vật Tư Nông Nghiệp. Tất cả quyền được bảo lưu.</p>
+                <p className="text-gray-300 text-center lg:col-span-2 xl:col-span-3 xl:order-4">&#169; 2025 Vật Tư Nông Nghiệp. Tất cả quyền được bảo lưu.</p>
             </div>
         </footer>
     )

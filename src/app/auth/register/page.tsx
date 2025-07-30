@@ -144,7 +144,7 @@ export default function RegisterPage() {
                         </p>
                     </div>
 
-                    <div className="relative">
+                    <div className="relative w-[80%] place-self-center">
                         <Image
                             src="/placeholder.svg?height=400&width=500"
                             alt="Nông dân hạnh phúc"

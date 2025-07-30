@@ -12,7 +12,7 @@ const categories = [
                 id: 1,
                 name: 'Lúa',
                 slug: 'hat-giong-lua',
-                items: [
+                types: [
                     {
                         name: 'Giống lúa Bắc Hương 9',
                         slug: 'giong-lua-bac-huong-9'
@@ -47,7 +47,7 @@ const categories = [
                 id: 2,
                 name: 'Hoa',
                 slug: 'hat-giong-hoa',
-                items: [
+                types: [
                     {
                         name: 'Giống hoa hồng',
                         slug: 'giong-hoa-hong'
@@ -66,7 +66,7 @@ const categories = [
                 id: 3,
                 name: 'Cây ăn quả',
                 slug: 'hat-giong-cay-an-qua',
-                items: [
+                types: [
                     {
                         name: 'Giống cây xoài',
                         slug: 'giong-cay-xoai'
@@ -89,7 +89,7 @@ const categories = [
                 id: 4,
                 name: 'Cây công nghiệp',
                 slug: 'hat-giong-cay-cong-nghiep',
-                items: [
+                types: [
                     {
                         name: 'Giống cây cao su',
                         slug: 'giong-cay-cao-su'
@@ -108,7 +108,7 @@ const categories = [
                 id: 5,
                 name: 'Cây dược liệu',
                 slug: 'hat-giong-cay-duoc-lieu',
-                items: [
+                types: [
                     {
                         name: 'Giống cây nghệ',
                         slug: 'giong-cay-nghe'
@@ -138,7 +138,7 @@ const categories = [
                 id: 1,
                 name: 'Phân bón hữu cơ',
                 slug: 'phan-bon-huu-co',
-                items: [
+                types: [
                     {
                         name: 'Phân bón hữu cơ vi sinh',
                         slug: 'phan-bon-huu-co-vi-sinh'
@@ -157,7 +157,7 @@ const categories = [
                 id: 2,
                 name: 'Phân bón vô cơ',
                 slug: 'phan-bon-vo-co',
-                items: [
+                types: [
                     {
                         name: 'Phân bón NPK',
                         slug: 'phan-bon-npk'
@@ -176,7 +176,7 @@ const categories = [
                 id: 3,
                 name: 'Phân bón lá',
                 slug: 'phan-bon-la',
-                items: [
+                types: [
                     {
                         name: 'Phân bón lá dinh dưỡng',
                         slug: 'phan-bon-la-dinh-duong'
@@ -195,7 +195,7 @@ const categories = [
                 id: 4,
                 name: 'Phân bón vi sinh',
                 slug: 'phan-bon-vi-sinh',
-                items: [
+                types: [
                     {
                         name: 'Phân bón vi sinh cho cây trồng',
                         slug: 'phan-bon-vi-sinh-cho-cay-trong'
@@ -214,7 +214,7 @@ const categories = [
                 id: 5,
                 name: 'Phân bón khác',
                 slug: 'phan-bon-khac',
-                items: [
+                types: [
                     {
                         name: 'Phân bón chuyên dụng',
                         slug: 'phan-bon-chuyen-dung'
@@ -244,7 +244,7 @@ const categories = [
                 id: 1,
                 name: 'Thuốc trừ sâu',
                 slug: 'thuoc-tru-sau',
-                items: [
+                types: [
                     {
                         name: 'Thuốc trừ sâu sinh học',
                         slug: 'thuoc-tru-sau-sinh-hoc'
@@ -263,7 +263,7 @@ const categories = [
                 id: 2,
                 name: 'Thuốc trừ bệnh',
                 slug: 'thuoc-tru-benh',
-                items: [
+                types: [
                     {
                         name: 'Thuốc trừ bệnh nấm',
                         slug: 'thuoc-tru-benh-nam'
@@ -282,7 +282,7 @@ const categories = [
                 id: 3,
                 name: 'Thuốc diệt cỏ',
                 slug: 'thuoc-diet-co',
-                items: [
+                types: [
                     {
                         name: 'Thuốc diệt cỏ chọn lọc',
                         slug: 'thuoc-diet-co-chon-loc'
@@ -301,7 +301,7 @@ const categories = [
                 id: 4,
                 name: 'Thuốc diệt nấm',
                 slug: 'thuoc-diet-nam',
-                items: [
+                types: [
                     {
                         name: 'Thuốc diệt nấm sinh học',
                         slug: 'thuoc-diet-nam-sinh-hoc'
@@ -320,7 +320,7 @@ const categories = [
                 id: 5,
                 name: 'Thuốc khác',
                 slug: 'thuoc-khac',
-                items: [
+                types: [
                     {
                         name: 'Thuốc kích thích sinh trưởng',
                         slug: 'thuoc-kich-thich-sinh-truong'
@@ -350,7 +350,7 @@ const categories = [
                 id: 1,
                 name: 'Máy bay nông nghiệp',
                 slug: 'may-bay-nong-nghiep',
-                items: [
+                types: [
                     {
                         name: 'DJI Agras T20',
                         slug: 'dji-agras-t20'
@@ -369,7 +369,7 @@ const categories = [
                 id: 2,
                 name: 'Máy phun thuốc',
                 slug: 'may-phun-thuoc',
-                items: [
+                types: [
                     {
                         name: 'Honda SABRE PL-25PS',
                         slug: 'honda-sabre-pl-25ps'
@@ -399,7 +399,7 @@ const categories = [
                 id: 1,
                 name: 'Dụng cụ làm đất',
                 slug: 'dung-cu-lam-dat',
-                items: [
+                types: [
                     {
                         name: 'Xẻng',
                         slug: 'xeng'
@@ -418,7 +418,7 @@ const categories = [
                 id: 2,
                 name: 'Dụng cụ tưới nước',
                 slug: 'dung-cu-tuoi-nuoc',
-                items: [
+                types: [
                     {
                         name: 'Ống tưới',
                         slug: 'ong-tuoi'
@@ -437,7 +437,7 @@ const categories = [
                 id: 3,
                 name: 'Dụng cụ thu hoạch',
                 slug: 'dung-cu-thu-hoach',
-                items: [
+                types: [
                     {
                         name: 'Dao thu hoạch',
                         slug: 'dao-thu-hoach'
@@ -456,7 +456,7 @@ const categories = [
                 id: 4,
                 name: 'Dụng cụ bảo quản nông sản',
                 slug: 'dung-cu-bao-quan-nong-san',
-                items: [
+                types: [
                     {
                         name: 'Thùng chứa nông sản',
                         slug: 'thung-chua-nong-san'
@@ -475,7 +475,7 @@ const categories = [
                 id: 5,
                 name: 'Dụng cụ khác',
                 slug: 'dung-cu-khac',
-                items: [
+                types: [
                     {
                         name: 'Găng tay làm vườn',
                         slug: 'gang-tay-lam-vuon'
@@ -505,7 +505,7 @@ const categories = [
                 id: 1,
                 name: 'Hệ thống tưới tiêu',
                 slug: 'he-thong-tuoi-tieu',
-                items: [
+                types: [
                     {
                         name: 'Hệ thống tưới nhỏ giọt',
                         slug: 'he-thong-tuoi-nho-giot'
@@ -524,7 +524,7 @@ const categories = [
                 id: 2,
                 name: 'Hệ thống nhà kính',
                 slug: 'he-thong-nha-kinh',
-                items: [
+                types: [
                     {
                         name: 'Nhà kính trồng rau',
                         slug: 'nha-kinh-trong-rau'
@@ -543,7 +543,7 @@ const categories = [
                 id: 3,
                 name: 'Vật tư bảo vệ cây trồng',
                 slug: 'vat-tu-bao-ve-cay-trong',
-                items: [
+                types: [
                     {
                         name: 'Lưới che nắng',
                         slug: 'luoi-che-nang'
@@ -562,7 +562,7 @@ const categories = [
                 id: 4,
                 name: 'Vật tư khác',
                 slug: 'vat-tu-khac',
-                items: [
+                types: [
                     {
                         name: 'Chậu trồng cây',
                         slug: 'chau-trong-cay'

@@ -112,14 +112,14 @@ const MenuMobile = ({ isOpen, onClose }: MobileMenuProps) => {
                                                 />
                                             </CollapsibleTrigger>
                                             <CollapsibleContent className="pl-4 space-y-1">
-                                                {sub.items.map((item, index) => (
+                                                {sub.types.map((type, index) => (
                                                     <Link
                                                         key={index}
-                                                        href={`/products?category=${category.slug}&subcategory=${sub.slug}&item=${item.slug}`}
+                                                        href={`/products?category=${category.slug}&subcategory=${sub.slug}&item=${type.slug}`}
                                                         className="block py-1 text-gray-500 hover:text-green-600"
                                                         onClick={onClose}
                                                     >
-                                                        {item.name}
+                                                        {type.name}
                                                     </Link>
                                                 ))}
                                             </CollapsibleContent>

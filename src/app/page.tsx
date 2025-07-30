@@ -3,7 +3,7 @@
 import CarouselBanner from '@/app/_components/carousel-banner';
 import { Phone, Shield, Truck } from 'lucide-react';
 import categories from '@/datalocals/categories';
-import products from '@/datalocals/product';
+import { products } from '@/datalocals/product';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -126,8 +126,8 @@ export default function HomePage() {
             {products.slice(0, 12).map((product) => (
               <div key={product.id} className="relative">
                 <Link href={`/products/${product.id}`}>
-                  <Card className="group hover:shadow-lg transition-shadow p-0 cursor-pointer">
-                    <CardContent className="p-4">
+                  <Card className="group hover:shadow-lg transition-shadow p-0 cursor-pointer h-full">
+                    <CardContent className="p-4 h-full">
                       <div className="relative mb-4">
                         <img
                           src={product.image}
@@ -145,7 +145,7 @@ export default function HomePage() {
                       <h1 className="font-semibold mb-2 line-clamp-2 text-lg">{product.name}</h1>
                       <div className="flex items-center mb-2">
                         <div className="flex items-center">
-                          <Rating name="half-rating" defaultValue={product.rating} precision={0.5} />
+                          <Rating name="read-only" defaultValue={product.rating} precision={0.5} readOnly />
                           <span className="text-sm text-gray-600 ml-1">
                             {product.rating} (100 lượt)
                           </span>
@@ -154,9 +154,9 @@ export default function HomePage() {
                       <div className="flex items-center justify-between">
                         <div>
                           <span className="text-lg font-bold text-green-600">{product.price.toLocaleString()}đ</span>
-                          {product.discount != 0 && (
+                          {product.originalPrice && (
                             <span className="text-sm text-gray-500 line-through ml-2">
-                              {(product.price - (product.price * product.discount / 100)).toLocaleString()}đ
+                              {product.originalPrice.toLocaleString()}đ
                             </span>
                           )}
                         </div>

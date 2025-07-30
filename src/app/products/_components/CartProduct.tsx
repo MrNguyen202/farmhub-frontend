@@ -5,25 +5,34 @@ import Rating from "@mui/material/Rating";
 import { ShoppingBasketIcon } from "lucide-react";
 import Link from "next/link";
 
-interface CartProductProps {
-    product: {
-        id: number;
-        name: string;
-        image: string;
-        description: string;
-        price: number;
-        rating: number;
-        discount: number;
-        badge: string;
-    };
+interface Product {
+    id: number
+    name: string
+    price: number
+    image: string
+    description: string
+    originalPrice: number | null
+    rating: number
+    reviews: number
+    badge: string | null
+    category: string
+    brand: string
+    sku: string
+    inStock: boolean
+    stockQuantity: number
 }
 
-const CartProduct = ({ product, viewMode }: CartProductProps & { viewMode: "grid" | "list" }) => {
+interface CartProductProps {
+    product: Product
+    viewMode: "grid" | "list"
+}
+
+const CartProduct = ({ product, viewMode }: any) => {
     return (
         <div key={product.id} className="relative">
             <Link href={`/products/${product.id}`}>
-                <Card className="group hover:shadow-lg transition-shadow p-0 cursor-pointer">
-                    <CardContent className={`p-4 ${viewMode === 'list' ? 'md:grid md:grid-cols-3 xl:grid-cols-4 md:gap-4' : 'md:grid md:grid-cols-1'}`}>
+                <Card className="group hover:shadow-lg transition-shadow p-0 cursor-pointer h-full">
+                    <CardContent className={`p-4 h-full ${viewMode === 'list' ? 'md:grid md:grid-cols-3 xl:grid-cols-4 md:gap-4' : 'md:grid md:grid-cols-1'}`}>
                         <div className={`relative mb-4 ${viewMode === 'list' ? 'md:col-span-1' : ''}`}>
                             <img
                                 src={product.image}
@@ -45,7 +54,7 @@ const CartProduct = ({ product, viewMode }: CartProductProps & { viewMode: "grid
                             )}
                             <div className="flex items-center mb-2">
                                 <div className="flex items-center">
-                                    <Rating name="half-rating" defaultValue={product.rating} precision={0.5} />
+                                    <Rating name="read-only" defaultValue={product.rating} precision={0.5} readOnly />
                                     <span className="text-sm text-gray-600 ml-1">
                                         {product.rating} (100 lượt)
                                     </span>
@@ -54,9 +63,9 @@ const CartProduct = ({ product, viewMode }: CartProductProps & { viewMode: "grid
                             <div className="flex items-center justify-between">
                                 <div>
                                     <span className="text-lg font-bold text-green-600">{product.price.toLocaleString()}đ</span>
-                                    {product.discount != 0 && (
+                                    {product.originalPrice && (
                                         <span className="text-sm text-gray-500 line-through ml-2">
-                                            {(product.price - (product.price * product.discount / 100)).toLocaleString()}đ
+                                            {product.originalPrice.toLocaleString()}đ
                                         </span>
                                     )}
                                 </div>

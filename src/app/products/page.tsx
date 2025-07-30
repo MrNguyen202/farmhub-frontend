@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, Funnel, Grid, List } from "lucide-react";
 import CartProduct from "./_components/CartProduct";
-import products from "@/datalocals/product";
+import {products} from "@/datalocals/product";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import categories from "@/datalocals/categories";
@@ -37,12 +37,12 @@ const ProductPage = () => {
 
   const categorySlug = searchParams.get("category");
   const subcategorySlug = searchParams.get("subcategory");
-  const itemSlug = searchParams.get("item");
+  const typeSlug = searchParams.get("type");
 
   // Tìm tên tương ứng từ categories
   const category = categories.find((c) => c.slug === categorySlug);
   const subcategory = category?.subCategories.find((sc) => sc.slug === subcategorySlug);
-  const item = subcategory?.items.find((i) => i.slug === itemSlug);
+  const type = subcategory?.types.find((t) => t.slug === typeSlug);
 
   // Cập nhật optionCategory nếu có categorySlug
   React.useEffect(() => {
@@ -99,8 +99,8 @@ const ProductPage = () => {
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     {
-                      item ? (
-                        <BreadcrumbLink href={`/products?category=${category?.slug}&subcategory=${subcategory.slug}`}>
+                      type ? (
+                        <BreadcrumbLink href={`/products?category=${category?.slug}&subcategory=${subcategory.slug}&type=${type.slug}`}>
                           {subcategory.name}
                         </BreadcrumbLink>
                       ) : (
@@ -111,11 +111,11 @@ const ProductPage = () => {
                 </>
               )}
 
-              {item && (
+              {type && (
                 <>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                    <BreadcrumbPage>{type.name}</BreadcrumbPage>
                   </BreadcrumbItem>
                 </>
               )}
@@ -306,7 +306,7 @@ const ProductPage = () => {
             </div>
 
             {/* List sản phẩm */}
-            <div className={`grid grid-cols-1 ${viewMode === "grid" ? "md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"} gap-4`}>
+            <div className={`grid grid-cols-1 ${viewMode === "grid" ? "md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "grid-cols-1"} gap-4`}>
               {products.slice((page - 1) * 12, page * 12).map((product) => (
                 <CartProduct key={product.id} product={product} viewMode={viewMode} />
               ))}
