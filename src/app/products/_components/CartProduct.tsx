@@ -3,38 +3,31 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Rating from "@mui/material/Rating";
 import { ShoppingBasketIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
-interface Product {
-    id: number
-    name: string
-    price: number
-    image: string
-    description: string
-    originalPrice: number | null
-    rating: number
-    reviews: number
-    badge: string | null
-    category: string
-    brand: string
-    sku: string
-    inStock: boolean
-    stockQuantity: number
+interface CardProductProps {
+    product: {
+        id: number;
+        name: string;
+        image: string;
+        description: string;
+        price: number;
+        rating: number;
+        originalPrice: number;
+        badge: string | null;
+    };
+    viewMode: 'grid' | 'list';
 }
 
-interface CartProductProps {
-    product: Product
-    viewMode: "grid" | "list"
-}
-
-const CartProduct = ({ product, viewMode }: any) => {
+const CartProduct = ({ product, viewMode }: CardProductProps) => {
     return (
         <div key={product.id} className="relative">
             <Link href={`/products/${product.id}`}>
                 <Card className="group hover:shadow-lg transition-shadow p-0 cursor-pointer h-full">
                     <CardContent className={`p-4 h-full ${viewMode === 'list' ? 'md:grid md:grid-cols-3 xl:grid-cols-4 md:gap-4' : 'md:grid md:grid-cols-1'}`}>
                         <div className={`relative mb-4 ${viewMode === 'list' ? 'md:col-span-1' : ''}`}>
-                            <img
+                            <Image
                                 src={product.image}
                                 alt={product.name}
                                 width={300}

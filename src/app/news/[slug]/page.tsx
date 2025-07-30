@@ -1,14 +1,16 @@
-import { notFound } from "next/navigation"
-import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { CalendarDays, Tag, ArrowLeft } from "lucide-react"
-import { newsData } from "@/datalocals/news"
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { CalendarDays, Tag, ArrowLeft } from "lucide-react";
+import { newsData } from "@/datalocals/news";
+import Image from "next/image";
 
-export default function NewsArticlePage({ params }: { params: { slug: string } }) {
-    const article = newsData.find((a) => a.slug === params.slug)
+export default async function NewsArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+    const resolvedParams = await params; // Giải quyết Promise để lấy slug
+    const article = newsData.find((a) => a.slug === resolvedParams.slug);
 
     if (!article) {
-        notFound()
+        notFound();
     }
 
     return (
@@ -34,9 +36,11 @@ export default function NewsArticlePage({ params }: { params: { slug: string } }
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{article.title}</h1>
 
                     <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden">
-                        <img
+                        <Image
                             src={article.image || "/placeholder.svg"}
                             alt={article.title}
+                            width={800}
+                            height={400}
                             style={{ objectFit: "cover" }}
                             className="rounded-lg w-full h-full object-cover"
                         />
@@ -45,7 +49,7 @@ export default function NewsArticlePage({ params }: { params: { slug: string } }
                     <div className="prose max-w-none text-gray-800 leading-relaxed text-lg">
                         <p className="font-semibold text-xl mb-4">{article.excerpt}</p>
                         <p>
-                            Đây là nội dung chi tiết của bài viết "{article.title}". Bạn có thể thêm nội dung đầy đủ ở đây. Nội dung
+                            Đây là nội dung chi tiết của bài viết &quot;{article.title}&quot;. Bạn có thể thêm nội dung đầy đủ ở đây. Nội dung
                             này sẽ bao gồm các đoạn văn, hình ảnh, video, biểu đồ, v.v. để cung cấp thông tin chuyên sâu cho người
                             đọc.
                         </p>
@@ -53,11 +57,10 @@ export default function NewsArticlePage({ params }: { params: { slug: string } }
                             Chúng tôi luôn nỗ lực mang đến những kiến thức hữu ích và cập nhật nhất để hỗ trợ bà con nông dân trong
                             quá trình canh tác. Hãy theo dõi thường xuyên để không bỏ lỡ các bài viết mới!
                         </p>
-                        {/* Thêm nội dung chi tiết khác ở đây */}
                         <h2 className="text-2xl font-bold mt-8 mb-4">Phần tiếp theo của bài viết</h2>
                         <p>
-                            Ví dụ, bạn có thể thêm các phần như "Các bước thực hiện", "Lưu ý quan trọng", "Câu hỏi thường gặp", hoặc
-                            "Sản phẩm liên quan" để làm phong phú nội dung.
+                            Ví dụ, bạn có thể thêm các phần như &quot;Các bước thực hiện&quot;, &quot;Lưu ý quan trọng&quot;, &quot;Câu hỏi thường gặp&quot;, hoặc
+                            &quot;Sản phẩm liên quan&quot; để làm phong phú nội dung.
                         </p>
                         <ul>
                             <li>Điểm 1: Chi tiết về chủ đề.</li>
@@ -69,5 +72,5 @@ export default function NewsArticlePage({ params }: { params: { slug: string } }
                 </div>
             </div>
         </div>
-    )
+    );
 }

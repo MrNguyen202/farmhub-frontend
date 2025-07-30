@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { ChevronLeft, ChevronRight, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 interface ProductGalleryProps {
     images: string[]
@@ -41,7 +41,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
             <div>
                 {/* Main Image */}
                 <div className="mb-4 relative">
-                    <img
+                    <Image
                         src={images[selectedImage] || "/placeholder.svg"}
                         alt={productName}
                         width={500}
@@ -92,7 +92,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                                     : "border-gray-200 hover:border-gray-400"
                                     }`}
                             >
-                                <img
+                                <Image
                                     src={image || "/placeholder.svg"}
                                     alt={`${productName} ${index + 1}`}
                                     width={100}
@@ -154,7 +154,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
 
                         {/* Main modal image */}
                         <div className="relative">
-                            <img
+                            <Image
                                 src={images[modalSelectedImage] || "/placeholder.svg"}
                                 alt={`${productName} ${modalSelectedImage + 1}`}
                                 width={800}

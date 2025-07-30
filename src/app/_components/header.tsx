@@ -13,6 +13,7 @@ import categories from "@/datalocals/categories";
 import React, { useState } from "react";
 import MenuMobile from "./menu-mobile";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -139,7 +140,7 @@ export function Header() {
                                 {/* Main navigation */}
                                 <div className="normal-case absolute top-full left-0 w-screen max-w-xs bg-white shadow-2xl border-t-2 border-green-500 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                                     <div className="grid grid-cols-1 gap-0">
-                                        {categories.slice(0, 6).map((category, index) => (
+                                        {categories.slice(0, 6).map((category) => (
                                             <div
                                                 key={category.slug}
                                                 className="relative group/sub px-4 pt-4 border-r border-b border-gray-200 last:border-r-0 hover:bg-green-100 transition-colors"
@@ -150,7 +151,7 @@ export function Header() {
                                                 >
                                                     <div className="flex items-center gap-2">
                                                         {category.icon && (
-                                                            <img src={category.icon} alt={category.name} className="w-6 h-6" />
+                                                            <Image src={category.icon} alt={category.name} width={24} height={24} className="w-6 h-6" />
                                                         )}
                                                         {category.label}
                                                     </div>

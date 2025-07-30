@@ -1,25 +1,23 @@
-"use client"
+"use client";
 
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, Funnel, Grid, List } from "lucide-react";
 import CartProduct from "./_components/CartProduct";
-import {products} from "@/datalocals/product";
+import { products } from "@/datalocals/product";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import categories from "@/datalocals/categories";
 import Rating from "@mui/material/Rating";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 import Modal from "@mui/material/Modal";
-
+import { Suspense } from "react";
+import SearchParamsHandler from "./_components/SearchParamsHandler";
 
 const ProductPage = () => {
-  const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid")
+  const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid");
   const [sortOption, setSortOption] = React.useState<"featured" | "newest" | "price-low" | "price-high" | "rating">("featured");
   const [selectedRating, setSelectedRating] = React.useState<number | null>(null);
   const [optionCategory, setOptionCategory] = React.useState<string | null>(null);
@@ -33,95 +31,13 @@ const ProductPage = () => {
     setOpen(false);
   };
 
-  const searchParams = useSearchParams();
-
-  const categorySlug = searchParams.get("category");
-  const subcategorySlug = searchParams.get("subcategory");
-  const typeSlug = searchParams.get("type");
-
-  // Tìm tên tương ứng từ categories
-  const category = categories.find((c) => c.slug === categorySlug);
-  const subcategory = category?.subCategories.find((sc) => sc.slug === subcategorySlug);
-  const type = subcategory?.types.find((t) => t.slug === typeSlug);
-
-  // Cập nhật optionCategory nếu có categorySlug
-  React.useEffect(() => {
-    if (categorySlug) {
-      setOptionCategory(categorySlug);
-    }
-  }, [categorySlug]);
-
   return (
     <div className="container mx-auto mb-10">
       <div className="grid grid-cols-1 gap-4 p-4">
-
-        {/* Breadcrunb */}
-        <div>
-          <Breadcrumb>
-            <BreadcrumbList className="text-base">
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/">Trang chủ</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-
-              <BreadcrumbSeparator />
-
-              {
-                category ? (
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/products">Sản phẩm</BreadcrumbLink>
-                  </BreadcrumbItem>
-                ) : (
-                  <BreadcrumbPage>Sản phẩm</BreadcrumbPage>
-                )
-              }
-
-              {category && (
-                <>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    {
-                      subcategory ? (
-                        <BreadcrumbLink href={`/products?category=${category.slug}`}>
-                          {category.label}
-                        </BreadcrumbLink>
-                      ) : (
-                        <BreadcrumbPage>{category.name}</BreadcrumbPage>
-                      )
-                    }
-                  </BreadcrumbItem>
-                </>
-              )}
-
-              {subcategory && (
-                <>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    {
-                      type ? (
-                        <BreadcrumbLink href={`/products?category=${category?.slug}&subcategory=${subcategory.slug}&type=${type.slug}`}>
-                          {subcategory.name}
-                        </BreadcrumbLink>
-                      ) : (
-                        <BreadcrumbPage>{subcategory.name}</BreadcrumbPage>
-                      )
-                    }
-                  </BreadcrumbItem>
-                </>
-              )}
-
-              {type && (
-                <>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>{type.name}</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </>
-              )}
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
+        {/* Breadcrumb được bọc trong Suspense */}
+        <Suspense fallback={<p>Đang tải breadcrumb...</p>}>
+          <SearchParamsHandler setOptionCategory={setOptionCategory} />
+        </Suspense>
 
         {/* Title */}
         <div className="flex flex-col gap-2">
@@ -130,7 +46,7 @@ const ProductPage = () => {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 w-full">
-          {/* Bộ lộc */}
+          {/* Bộ lọc */}
           <div className="hidden col-span-1 w-full border rounded-lg border-gray-300 shadow-xl bg-white h-fit xl:p-6 xl:block">
             <h3 className="font-bold mb-4 flex items-center text-xl">
               <Funnel className="w-4 h-4 mr-2" />
@@ -189,7 +105,7 @@ const ProductPage = () => {
             </div>
           </div>
 
-          {/* Section list sản phẩm */}
+          {/* Section danh sách sản phẩm */}
           <div className="xl:col-span-3 w-full flex flex-col gap-4 max-w-md place-self-center md:max-w-none xl:place-self-start">
             <div className="flex items-center justify-between">
               <div className="hidden md:flex items-center gap-2">
@@ -214,7 +130,7 @@ const ProductPage = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline">
-                      <ArrowUpDown className="w-4 h-4 mr-2" />  
+                      <ArrowUpDown className="w-4 h-4 mr-2" />
                       Sắp xếp theo
                     </Button>
                   </DropdownMenuTrigger>
@@ -299,7 +215,6 @@ const ProductPage = () => {
                         Đóng
                       </Button>
                     </div>
-
                   </Modal>
                 </div>
               </div>
@@ -316,16 +231,21 @@ const ProductPage = () => {
             {products.length / 12 > 1 && (
               <div className="mt-5 place-self-center">
                 <Stack spacing={2}>
-                  <Pagination size="large" count={Math.ceil(products.length / 12)} color="secondary" page={page} onChange={(event, value) => setPage(value)} />
+                  <Pagination
+                    size="large"
+                    count={Math.ceil(products.length / 12)}
+                    color="secondary"
+                    page={page}
+                    onChange={(event, value) => setPage(value)}
+                  />
                 </Stack>
               </div>
             )}
-
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default ProductPage;

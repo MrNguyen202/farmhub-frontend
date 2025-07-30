@@ -8,8 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ArrowLeft, Package, Calendar, DollarSign, Info, Search, MapPin, CheckCircle, XCircle } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { ArrowLeft, Package, Calendar, DollarSign, Info, MapPin, CheckCircle, XCircle } from "lucide-react"
+import Image from "next/image"
 
 // Định nghĩa kiểu dữ liệu cho sản phẩm trong đơn hàng
 interface OrderItem {
@@ -151,7 +151,7 @@ const getStatusText = (status: Order["status"]) => {
 }
 
 export default function OrdersPage() {
-    const [searchTerm, setSearchTerm] = useState("")
+    const [searchTerm] = useState("")
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
 
     const filteredOrders = mockOrders.filter(
@@ -338,10 +338,12 @@ export default function OrdersPage() {
                                                     {selectedOrder.items.map((item) => (
                                                         <TableRow key={item.productId}>
                                                             <TableCell>
-                                                                <img
+                                                                <Image
                                                                     src={item.image || "/placeholder.svg"}
                                                                     alt={item.name}
                                                                     className="w-10 h-10 object-cover rounded"
+                                                                    width={40}
+                                                                    height={40}
                                                                 />
                                                             </TableCell>
                                                             <TableCell className="font-medium">{item.name}</TableCell>

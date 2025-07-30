@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { newsData } from "@/datalocals/news"
 import { CalendarDays, Tag } from "lucide-react"
+import Image from "next/image"
 
 const ARTICLES_PER_PAGE = 6
 
@@ -44,7 +45,7 @@ export default function NewsPage() {
                     {currentArticles.map((article) => (
                         <Card key={article.id} className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                             <Link href={`/news/${article.slug}`}>
-                                <img
+                                <Image
                                     src={article.image || "/placeholder.svg"}
                                     alt={article.title}
                                     width={600}

@@ -9,7 +9,32 @@ import { productsData } from "@/datalocals/product"
 import reviews from "@/datalocals/feedback"
 import { use } from "react"
 import categories from "@/datalocals/categories"
-import { toast } from "react-toastify"
+
+interface ProductData {
+    id: number,
+    name: string,
+    price: number,
+    originalPrice: number,
+    image: string,
+    rating: number,
+    reviews: number,
+    badge: string | null,
+    category: string,
+    description: string,
+    specifications: {
+        "Thành phần": string,
+        "Trọng lượng": string,
+        "Xuất xứ": string,
+        "Hạn sử dụng": string,
+        "Bảo quản": string,
+    },
+    usage: string,
+    brand: string,
+    sku: string,
+    inStock: true,
+    stockQuantity: number,
+    images: string[]
+}
 
 
 export default function ProductDetailPage({ params }: { params: Promise<{ detail: string }> }) {
@@ -27,7 +52,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ detail
     // Lọc sản phẩm liên quan
     // Ensure 'category' exists on all product objects in productsData, or replace 'category' with an existing property for filtering
     const relatedProducts = productsData.filter(
-        (p) => (p as any).category === (product as any).category && p.id !== product.id
+        (p) => (p as ProductData).category === (product as ProductData).category && p.id !== product.id
     ).slice(0, 3)
 
     return (

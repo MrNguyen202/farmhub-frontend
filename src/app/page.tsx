@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import Rating from '@mui/material/Rating';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import { motion } from "framer-motion";
+import Image from 'next/image';
 
 
 export default function HomePage() {
@@ -164,7 +165,7 @@ export default function HomePage() {
                   <Card className="group hover:shadow-lg transition-shadow p-0 cursor-pointer h-full">
                     <CardContent className="p-4 h-full">
                       <div className="relative mb-4">
-                        <img
+                        <Image
                           src={product.image}
                           alt={product.name}
                           width={300}

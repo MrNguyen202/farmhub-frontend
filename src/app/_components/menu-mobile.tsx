@@ -8,6 +8,7 @@ import { ChevronDown, ChevronRight, LogIn, NotebookPen, Truck, UserRoundPen } fr
 import Link from "next/link";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import PersonIcon from '@mui/icons-material/Person';
+import Image from "next/image";
 
 interface MobileMenuProps {
     isOpen: boolean
@@ -74,11 +75,11 @@ const MenuMobile = ({ isOpen, onClose }: MobileMenuProps) => {
                 <div className="p-4">
                     <nav className="space-y-2">
                         <Link href="/" className="flex items-center py-2 gap-2 font-bold text-gray-700 hover:text-green-600" onClick={onClose}>
-                            <img src="/icons/home.webp" alt="" className="w-10 h-10" />
+                            <Image src="/icons/home.webp" alt="" width={40} height={40} className="w-10 h-10" />
                             Trang chủ
                         </Link>
                         <Link href="/products" className="flex items-center gap-2 font-bold py-2 text-gray-700 hover:text-green-600" onClick={onClose}>
-                            <img src="/icons/product.jpg" alt="" className="w-10 h-10" />
+                            <Image src="/icons/product.jpg" alt="" width={40} height={40} className="w-10 h-10" />
                             Sản phẩm
                         </Link>
 
@@ -91,7 +92,7 @@ const MenuMobile = ({ isOpen, onClose }: MobileMenuProps) => {
                                 >
                                     <div className="flex items-center gap-2">
                                         {category.icon && (
-                                            <img src={category.icon} alt={category.name} className="w-10 h-10" />
+                                            <Image src={category.icon} alt={category.name} width={40} height={40} className="w-10 h-10" />
                                         )}
                                         <span className="font-bold">{category.label}</span>
                                     </div>
@@ -130,19 +131,19 @@ const MenuMobile = ({ isOpen, onClose }: MobileMenuProps) => {
                         ))}
 
                         <Link href="/about" className="flex items-center gap-2 font-bold py-2 text-gray-700 hover:text-green-600" onClick={onClose}>
-                            <img src="/icons/introdution.jpg" alt="" className="w-10 h-10" />
+                            <Image src="/icons/introdution.jpg" alt="" width={40} height={40} className="w-10 h-10" />
                             Giới thiệu
                         </Link>
                         <Link href="/contact" className="flex items-center gap-2 font-bold py-2 text-gray-700 hover:text-green-600" onClick={onClose}>
-                            <img src="/icons/helpdesk.gif" alt="" className="w-10 h-10" />
+                            <Image src="/icons/helpdesk.gif" alt="" width={40} height={40} className="w-10 h-10" />
                             Liên hệ
                         </Link>
                         <Link href="/news" className="flex items-center gap-2 font-bold  py-2 text-gray-700 hover:text-green-600" onClick={onClose}>
-                            <img src="/icons/newspaper.png" alt="" className="w-10 h-10" />
+                            <Image src="/icons/newspaper.png" alt="" width={40} height={40} className="w-10 h-10" />
                             Tin tức
                         </Link>
                         <Link href="/handbook" className="flex items-center gap-2 font-bold py-2 text-gray-700 hover:text-green-600" onClick={onClose}>
-                            <img src="/icons/hand-notebook.jpg" alt="" className="w-10 h-10" />
+                            <Image src="/icons/hand-notebook.jpg" alt="" width={40} height={40} className="w-10 h-10" />
                             Sổ tay mùa vụ
                         </Link>
                     </nav>

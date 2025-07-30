@@ -2,14 +2,14 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useEffect } from "react"
-import { ArrowLeft, Minus, Plus, Trash2, ShoppingCart, Tag, Truck, Shield, CreditCard, User, Gift } from "lucide-react"
+import { ArrowLeft, Minus, Plus, Trash2, ShoppingCart, Truck, Shield, CreditCard } from "lucide-react"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import Image from "next/image"
 
 // Định nghĩa kiểu dữ liệu cho sản phẩm trong giỏ hàng
 interface CartItem {
@@ -26,15 +26,6 @@ interface CartItem {
 
 export default function CartPage() {
     const [cartItems, setCartItems] = useState<CartItem[]>([])
-    const [couponCode, setCouponCode] = useState("")
-    const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
-    const [customerInfo, setCustomerInfo] = useState({
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
-        note: "",
-    })
 
     // Giả lập dữ liệu giỏ hàng từ localStorage
     useEffect(() => {
@@ -46,9 +37,8 @@ export default function CartPage() {
 
     // Tính toán tổng tiền
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-    const discount = appliedCoupon ? (subtotal * appliedCoupon.discount) / 100 : 0
     const shippingFee = subtotal >= 1000000 ? 0 : 50000
-    const total = subtotal - discount + shippingFee
+    const total = subtotal + shippingFee
 
     // Cập nhật số lượng sản phẩm
     const updateQuantity = (id: number, newQuantity: number) => {
@@ -81,10 +71,6 @@ export default function CartPage() {
             alert("Có sản phẩm hết hàng trong giỏ hàng. Vui lòng xóa hoặc thay thế!")
             return
         }
-
-        // Giả lập đặt hàng
-        console.log("Đặt hàng:", { cartItems, customerInfo, total })
-        alert("Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.")
     }
 
     if (cartItems.length === 0) {
@@ -144,7 +130,7 @@ export default function CartPage() {
                             {cartItems.map((item) => (
                                 <div key={item.id} className="flex gap-4 p-4 border rounded-lg">
                                     <div className="relative hidden md:block">
-                                        <img
+                                        <Image
                                             src={item.image || "/placeholder.svg"}
                                             alt={item.name}
                                             width={100}
@@ -231,13 +217,6 @@ export default function CartPage() {
                                 <span>Tạm tính:</span>
                                 <span>{subtotal.toLocaleString()}đ</span>
                             </div>
-
-                            {appliedCoupon && (
-                                <div className="flex justify-between text-green-600">
-                                    <span>Giảm giá ({appliedCoupon.discount}%):</span>
-                                    <span>-{discount.toLocaleString()}đ</span>
-                                </div>
-                            )}
 
                             <div className="flex justify-between">
                                 <span>Phí vận chuyển:</span>
