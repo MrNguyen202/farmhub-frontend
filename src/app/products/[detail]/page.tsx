@@ -9,6 +9,7 @@ import { productsData } from "@/datalocals/product"
 import reviews from "@/datalocals/feedback"
 import { use } from "react"
 import categories from "@/datalocals/categories"
+import { toast } from "react-toastify"
 
 
 export default function ProductDetailPage({ params }: { params: Promise<{ detail: string }> }) {

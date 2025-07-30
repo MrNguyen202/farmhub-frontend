@@ -20,6 +20,7 @@ import {
     CheckCircle,
     XCircle,
 } from "lucide-react"
+import { toast } from "react-toastify"
 
 interface Product {
     id: number
@@ -42,6 +43,24 @@ interface ProductInfoProps {
 
 export function ProductInfo({ product }: ProductInfoProps) {
     const [quantity, setQuantity] = useState(1)
+
+    // Hàm xử lý thêm sản phẩm vào giỏ hàng
+    const handleAddToCart = () => {
+        // Gọi API xử lý thêm sản phẩm vào giỏ hàng
+
+        // Giả lập bằng localStorage
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]")
+        const existingItem = cart.find((item: { id: number }) => item.id === product.id)
+        if (existingItem) {
+            existingItem.quantity += quantity
+        } else {
+            cart.push({ ...product, quantity })
+        }
+        localStorage.setItem("cart", JSON.stringify(cart))
+        toast.success("Sản phẩm đã được thêm vào giỏ hàng!", {
+            position: "top-right",
+        })
+    }
 
     return (
         <div>
@@ -139,7 +158,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                    <Button size="lg" className="flex-1 bg-green-600 hover:bg-green-700 text-lg py-3">
+                    <Button size="lg" className="flex-1 bg-green-600 hover:bg-green-700 text-lg py-3" onClick={handleAddToCart}>
                         <ShoppingCart className="w-5 h-5 mr-2" />
                         Thêm vào giỏ hàng
                     </Button>

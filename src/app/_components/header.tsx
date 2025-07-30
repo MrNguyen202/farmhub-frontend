@@ -97,7 +97,9 @@ export function Header() {
                                 <DropdownMenuItem asChild>
                                     <Link href="/account"><UserRoundPen /> Tài khoản</Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem> <Truck /> Đơn hàng</DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link href="/orders"><Truck /> Đơn hàng</Link>
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

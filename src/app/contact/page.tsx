@@ -11,7 +11,7 @@ export default function ContactPage() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-b from-green-600 to-green-800 text-white py-20 md:py-24 md:bg-gradient-to-r">
+            <section className="relative bg-gradient-to-b from-green-600 to-green-800 text-white py-20 md:py-24 ">
                 <div className="container mx-auto px-4 text-center">
                     <h1 className="text-3xl md:text-5xl font-bold mb-4">Liên hệ với chúng tôi</h1>
                     <p className="text-xl md:text-2xl text-green-100 max-w-3xl mx-auto">

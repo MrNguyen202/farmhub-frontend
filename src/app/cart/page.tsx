@@ -4,12 +4,10 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+import { useEffect } from "react"
 import { ArrowLeft, Minus, Plus, Trash2, ShoppingCart, Tag, Truck, Shield, CreditCard, User, Gift } from "lucide-react"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 
@@ -26,43 +24,8 @@ interface CartItem {
     maxQuantity: number
 }
 
-// Dữ liệu giỏ hàng mẫu
-const initialCartItems: CartItem[] = [
-    {
-        id: 1,
-        name: "Phân bón NPK 16-16-8 (Bao 50kg)",
-        price: 450000,
-        originalPrice: 500000,
-        image: "/placeholder.svg?height=100&width=100&text=NPK",
-        category: "Phân bón",
-        quantity: 2,
-        inStock: true,
-        maxQuantity: 10,
-    },
-    {
-        id: 2,
-        name: "Hạt giống lúa ST25 (1kg)",
-        price: 85000,
-        image: "/placeholder.svg?height=100&width=100&text=ST25",
-        category: "Hạt giống",
-        quantity: 3,
-        inStock: true,
-        maxQuantity: 20,
-    },
-    {
-        id: 3,
-        name: "Thuốc trừ sâu sinh học BT (500ml)",
-        price: 320000,
-        image: "/placeholder.svg?height=100&width=100&text=BT",
-        category: "Thuốc BVTV",
-        quantity: 1,
-        inStock: false,
-        maxQuantity: 5,
-    },
-]
-
 export default function CartPage() {
-    const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems)
+    const [cartItems, setCartItems] = useState<CartItem[]>([])
     const [couponCode, setCouponCode] = useState("")
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
     const [customerInfo, setCustomerInfo] = useState({
@@ -73,6 +36,14 @@ export default function CartPage() {
         note: "",
     })
 
+    // Giả lập dữ liệu giỏ hàng từ localStorage
+    useEffect(() => {
+        const storedCart = localStorage.getItem("cart")
+        if (storedCart) {
+            setCartItems(JSON.parse(storedCart))
+        }
+    }, [])
+
     // Tính toán tổng tiền
     const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
     const discount = appliedCoupon ? (subtotal * appliedCoupon.discount) / 100 : 0
@@ -81,50 +52,29 @@ export default function CartPage() {
 
     // Cập nhật số lượng sản phẩm
     const updateQuantity = (id: number, newQuantity: number) => {
-        if (newQuantity < 1) return
-
-        setCartItems((items) =>
-            items.map((item) => (item.id === id ? { ...item, quantity: Math.min(newQuantity, item.maxQuantity) } : item)),
-        )
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]")
+        const itemIndex = cart.findIndex((item: CartItem) => item.id === id)
+        if (itemIndex !== -1) {
+            if (newQuantity <= 0) {
+                cart.splice(itemIndex, 1)
+            } else {
+                cart[itemIndex].quantity = newQuantity
+            }
+            localStorage.setItem("cart", JSON.stringify(cart))
+            setCartItems(cart)
+        }
     }
+
 
     // Xóa sản phẩm khỏi giỏ hàng
     const removeItem = (id: number) => {
-        setCartItems((items) => items.filter((item) => item.id !== id))
-    }
-
-    // Áp dụng mã giảm giá
-    const applyCoupon = () => {
-        // Giả lập kiểm tra mã giảm giá
-        const validCoupons = {
-            NONGDAN10: 10,
-            VATTU15: 15,
-            NEWCUSTOMER: 20,
-        }
-
-        if (validCoupons[couponCode as keyof typeof validCoupons]) {
-            setAppliedCoupon({
-                code: couponCode,
-                discount: validCoupons[couponCode as keyof typeof validCoupons],
-            })
-            setCouponCode("")
-        } else {
-            alert("Mã giảm giá không hợp lệ!")
-        }
-    }
-
-    // Xóa mã giảm giá
-    const removeCoupon = () => {
-        setAppliedCoupon(null)
+        const updatedItems = cartItems.filter((item) => item.id !== id)
+        setCartItems(updatedItems)
+        localStorage.setItem("cart", JSON.stringify(updatedItems))
     }
 
     // Xử lý đặt hàng
     const handleCheckout = () => {
-        if (!customerInfo.name || !customerInfo.phone || !customerInfo.address) {
-            alert("Vui lòng điền đầy đủ thông tin giao hàng!")
-            return
-        }
-
         // Kiểm tra sản phẩm hết hàng
         const outOfStockItems = cartItems.filter((item) => !item.inStock)
         if (outOfStockItems.length > 0) {
@@ -193,30 +143,25 @@ export default function CartPage() {
                         <CardContent className="space-y-4">
                             {cartItems.map((item) => (
                                 <div key={item.id} className="flex gap-4 p-4 border rounded-lg">
-                                    <div className="relative">
-                                        <Image
+                                    <div className="relative hidden md:block">
+                                        <img
                                             src={item.image || "/placeholder.svg"}
                                             alt={item.name}
                                             width={100}
                                             height={100}
                                             className="w-20 h-20 object-cover rounded-lg"
                                         />
-                                        {!item.inStock && (
-                                            <div className="absolute inset-0 bg-red-500 bg-opacity-20 flex items-center justify-center rounded-lg">
-                                                <Badge variant="destructive" className="text-xs">
-                                                    Hết hàng
-                                                </Badge>
-                                            </div>
-                                        )}
                                     </div>
 
                                     <div className="flex-1">
                                         <div className="flex justify-between items-start mb-2">
-                                            <div>
-                                                <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                                                <Badge variant="secondary" className="text-xs mt-1">
-                                                    {item.category}
-                                                </Badge>
+                                            <div className="grid grid-cols-1 gap-2 items-center">
+                                                <h3 className="font-semibold text-gray-800 line-clamp-2">{item.name}</h3>
+                                                {item.inStock ? (
+                                                    <Badge className="bg-green-100 text-green-800">Còn hàng</Badge>
+                                                ) : (
+                                                    <Badge className="bg-red-100 text-red-800">Hết hàng</Badge>
+                                                )}
                                             </div>
                                             <Button
                                                 variant="ghost"
@@ -261,112 +206,18 @@ export default function CartPage() {
                                             </div>
                                         </div>
 
-                                        <div className="flex justify-between items-center mt-2">
-                                            <span className="text-sm text-gray-500">Còn lại: {item.maxQuantity} sản phẩm</span>
+                                        <div className="flex justify-end items-center mt-2">
                                             <span className="font-semibold">Tổng: {(item.price * item.quantity).toLocaleString()}đ</span>
                                         </div>
                                     </div>
                                 </div>
                             ))}
-
-                            {/* Coupon Section */}
-                            <div className="border-t pt-4">
-                                <div className="flex gap-2">
-                                    <div className="flex-1">
-                                        <Input
-                                            placeholder="Nhập mã giảm giá"
-                                            value={couponCode}
-                                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                                        />
-                                    </div>
-                                    <Button onClick={applyCoupon} disabled={!couponCode} className="bg-green-600 hover:bg-green-700">
-                                        <Tag className="w-4 h-4 mr-2" />
-                                        Áp dụng
-                                    </Button>
-                                </div>
-
-                                {appliedCoupon && (
-                                    <div className="mt-2 flex items-center justify-between bg-green-50 p-3 rounded-lg">
-                                        <div className="flex items-center gap-2">
-                                            <Gift className="w-4 h-4 text-green-600" />
-                                            <span className="text-sm font-medium">
-                                                Mã "{appliedCoupon.code}" - Giảm {appliedCoupon.discount}%
-                                            </span>
-                                        </div>
-                                        <Button variant="ghost" size="sm" onClick={removeCoupon}>
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                    </div>
-                                )}
-
-                                <div className="mt-2 text-xs text-gray-500">
-                                    Mã giảm giá có sẵn: NONGDAN10 (10%), VATTU15 (15%), NEWCUSTOMER (20%)
-                                </div>
-                            </div>
                         </CardContent>
                     </Card>
                 </div>
 
                 {/* Order Summary & Customer Info */}
                 <div className="space-y-6">
-                    {/* Customer Information */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <User className="w-5 h-5" />
-                                Thông tin giao hàng
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div>
-                                <Label htmlFor="name">Họ và tên *</Label>
-                                <Input
-                                    id="name"
-                                    placeholder="Nguyễn Văn A"
-                                    value={customerInfo.name}
-                                    onChange={(e) => setCustomerInfo((prev) => ({ ...prev, name: e.target.value }))}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="phone">Số điện thoại *</Label>
-                                <Input
-                                    id="phone"
-                                    placeholder="0123456789"
-                                    value={customerInfo.phone}
-                                    onChange={(e) => setCustomerInfo((prev) => ({ ...prev, phone: e.target.value }))}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    placeholder="your@email.com"
-                                    value={customerInfo.email}
-                                    onChange={(e) => setCustomerInfo((prev) => ({ ...prev, email: e.target.value }))}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="address">Địa chỉ giao hàng *</Label>
-                                <Textarea
-                                    id="address"
-                                    placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
-                                    value={customerInfo.address}
-                                    onChange={(e) => setCustomerInfo((prev) => ({ ...prev, address: e.target.value }))}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="note">Ghi chú đơn hàng</Label>
-                                <Textarea
-                                    id="note"
-                                    placeholder="Ghi chú thêm về đơn hàng (tùy chọn)"
-                                    value={customerInfo.note}
-                                    onChange={(e) => setCustomerInfo((prev) => ({ ...prev, note: e.target.value }))}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-
                     {/* Order Summary */}
                     <Card>
                         <CardHeader>

@@ -29,7 +29,7 @@ export default function NewsPage() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-r from-green-700 to-green-900 text-white py-20 md:py-24">
+            <section className="relative bg-gradient-to-b from-green-600 to-green-800 text-white py-20 md:py-24">
                 <div className="container mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">Tin Tức Nông Nghiệp</h1>
                     <p className="text-xl md:text-2xl text-green-100 max-w-3xl mx-auto">
