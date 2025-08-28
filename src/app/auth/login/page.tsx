@@ -12,33 +12,32 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, Facebook, Chrome } from "lucide-react"
+import { toast } from "react-toastify"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext"
 
 export default function LoginPage() {
+    const router = useRouter()
     const [showPassword, setShowPassword] = useState(false)
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-        rememberMe: false,
-    })
+    const { login } = useAuth()
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false)
+    const [rememberMe, setRememberMe] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsLoading(true)
+        e.preventDefault();
+        const result = await login(email, password, rememberMe);
+        if (result.success) {
+            // Handle successful login
+            toast.success("Đăng nhập thành công!")
+            router.push("/")
+        } else {
+            // Handle errors from the server
+            toast.error(result.error || "Đăng nhập không thành công, vui lòng thử lại.")
+        }
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-
-        console.log("Login data:", formData)
         setIsLoading(false)
-    }
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }))
     }
 
     return (
@@ -101,8 +100,8 @@ export default function LoginPage() {
                                             name="email"
                                             type="email"
                                             placeholder="your@email.com"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
                                             className="pl-10"
                                             required
                                         />
@@ -119,8 +118,8 @@ export default function LoginPage() {
                                             name="password"
                                             type={showPassword ? "text" : "password"}
                                             placeholder="••••••••"
-                                            value={formData.password}
-                                            onChange={handleInputChange}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
                                             className="pl-10 pr-10"
                                             required
                                         />
@@ -145,10 +144,8 @@ export default function LoginPage() {
                                     <div className="flex items-center space-x-2">
                                         <Checkbox
                                             id="remember"
-                                            checked={formData.rememberMe}
-                                            onCheckedChange={(checked) =>
-                                                setFormData((prev) => ({ ...prev, rememberMe: checked as boolean }))
-                                            }
+                                            checked={rememberMe}
+                                            onCheckedChange={(checked) => setRememberMe(checked as boolean)}
                                         />
                                         <Label htmlFor="remember" className="text-sm">
                                             Ghi nhớ đăng nhập

@@ -5,6 +5,7 @@ import "./globals.css"
 import { Header } from "@/app/_components/header"
 import { Footer } from "@/app/_components/footer"
 import { ToastContainer } from "react-toastify"
+import { AuthProvider } from "@/contexts/AuthContext"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -22,10 +23,12 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className={inter.className}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <ToastContainer />
+        <AuthProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <ToastContainer />
+        </AuthProvider>
       </body>
     </html>
   )

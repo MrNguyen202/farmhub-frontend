@@ -1,10 +1,8 @@
 "use client"
 
 import { Textarea } from "@/components/ui/textarea"
-
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useEffect } from "react" // Thêm useEffect để load data user
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,7 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { User, Mail, Phone, MapPin, Lock, ArrowLeft, Save, Eye, EyeOff, Camera } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast } from "react-toastify"
-
+import { useAuth } from "@/contexts/AuthContext" // Import useAuth để lấy user và logout
+import { useRouter } from 'next/navigation' // Import để chuyển hướng sau logout
 
 export default function AccountPage() {
     const [activeTab, setActiveTab] = useState("profile")
@@ -22,12 +21,16 @@ export default function AccountPage() {
     const [showNewPassword, setShowNewPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    // Mock user data (replace with actual data fetched from backend)
+    const { user, logout, refreshUser } = useAuth() // Lấy user từ AuthContext
+    const router = useRouter()
+    const [loading, setLoading] = useState(false) // Thêm state loading cho form
+
+    // State cho thông tin cá nhân (load từ user thực thay vì mock)
     const [userData, setUserData] = useState({
-        fullName: "Nguyễn Văn A",
-        email: "nguyenvana@example.com",
-        phone: "0912345678",
-        address: "123 Đường ABC, Phường XYZ, Quận 1, TP. Hồ Chí Minh",
+        fullName: "",
+        email: "",
+        phone: "",
+        address: "",
         avatarUrl: "/placeholder.svg?height=100&width=100&text=AV", // Default avatar
     })
 
@@ -37,7 +40,22 @@ export default function AccountPage() {
         confirmNewPassword: "",
     })
 
-    const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Load data user từ AuthContext khi component mount
+    useEffect(() => {
+        if (user) {
+            setUserData({
+                fullName: user.fullName || "",
+                email: user.email || "",
+                phone: user.phone || "",
+                address: user.address || "",
+                avatarUrl: user.avatar_url || "/placeholder.svg",
+            })
+        } else {
+            router.push('/auth/login') // Chuyển hướng nếu chưa đăng nhập
+        }
+    }, [user, router])
+
+    const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setUserData((prev) => ({ ...prev, [name]: value }))
     }
@@ -47,31 +65,75 @@ export default function AccountPage() {
         setPasswordData((prev) => ({ ...prev, [name]: value }))
     }
 
-    const handleSaveProfile = (e: React.FormEvent) => {
-        toast.success("Cập nhật thành công! Thông tin cá nhân của bạn đã được cập nhật.")
+    const handleSaveProfile = async (e: React.FormEvent) => {
         e.preventDefault()
-        // Simulate API call
-        console.log("Saving profile:", userData)
+        setLoading(true)
+        try {
+            // Gọi API để cập nhật profile (bạn cần tạo endpoint này, ví dụ: /api/auth/update-profile)
+            const response = await fetch('/api/auth/update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // Gửi cookie auth-token
+                body: JSON.stringify(userData),
+            })
+            if (response.ok) {
+                toast.success("Cập nhật thành công! Thông tin cá nhân của bạn đã được cập nhật.")
+                await refreshUser() // Refresh user từ AuthContext để cập nhật state
+            } else {
+                const data = await response.json()
+                toast.error(data.error || "Đã có lỗi khi cập nhật profile.")
+            }
+        } catch (error) {
+            console.error("Save profile error:", error)
+            toast.error("Không thể kết nối đến server.")
+        } finally {
+            setLoading(false)
+        }
     }
 
-    const handleSavePassword = (e: React.FormEvent) => {
+    const handleSavePassword = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true)
         if (passwordData.newPassword !== passwordData.confirmNewPassword) {
             toast.error("Lỗi: Mật khẩu mới và xác nhận mật khẩu không khớp.", {
                 className: "bg-red-100 text-red-700"
             })
+            setLoading(false)
             return
         }
         if (passwordData.newPassword.length < 6) {
             toast.error("Lỗi: Mật khẩu mới phải có ít nhất 6 ký tự.", {
                 className: "bg-red-100 text-red-700"
             })
+            setLoading(false)
             return
         }
-        // Simulate API call
-        console.log("Changing password:", passwordData)
-        toast("Cập nhật thành công! Mật khẩu của bạn đã được thay đổi.")
-        setPasswordData({ currentPassword: "", newPassword: "", confirmNewPassword: "" }) // Clear fields
+
+        try {
+            const response = await fetch('/api/auth/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // Gửi cookie auth-token
+                body: JSON.stringify({
+                    currentPassword: passwordData.currentPassword,
+                    newPassword: passwordData.newPassword,
+                }),
+            })
+            const data = await response.json()
+            if (response.ok) {
+                toast.success("Cập nhật thành công! Mật khẩu của bạn đã được thay đổi.")
+                setPasswordData({ currentPassword: "", newPassword: "", confirmNewPassword: "" }) // Clear fields
+                await logout() // Đăng xuất để yêu cầu đăng nhập lại
+                router.push('/auth/login')
+            } else {
+                toast.error(data.error || "Đã có lỗi khi đổi mật khẩu.")
+            }
+        } catch (error) {
+            console.error("Change password error:", error)
+            toast.error("Không thể kết nối đến server.")
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +165,7 @@ export default function AccountPage() {
 
                 <Card className="shadow-xl border-0">
                     <CardHeader className="text-center pb-6">
-                        <CardTitle className="text-3xl font-bold">Quản lý tài khoản</CardTitle>
+                        <CardTitle className="text-3xl font-bold">Quản lý tài khoản</CardTitle> {/* Sửa tiêu đề từ "Quản lý" thành đúng */}
                         <CardDescription>Cập nhật thông tin cá nhân và thay đổi mật khẩu của bạn.</CardDescription>
                     </CardHeader>
 
@@ -152,12 +214,12 @@ export default function AccountPage() {
                                                 value={userData.fullName}
                                                 onChange={handleProfileChange}
                                                 className="pl-10"
-                                                required
+                                                disabled={loading}
                                             />
                                         </div>
                                     </div>
 
-                                    {/* Email (usually read-only or requires verification) */}
+                                    {/* Email */}
                                     <div className="space-y-2">
                                         <Label htmlFor="email">Email</Label>
                                         <div className="relative">
@@ -166,9 +228,11 @@ export default function AccountPage() {
                                                 id="email"
                                                 name="email"
                                                 type="email"
+                                                placeholder="example@email.com"
                                                 value={userData.email}
-                                                className="pl-10 bg-gray-100 cursor-not-allowed"
-                                                readOnly // Email is often read-only or requires special flow to change
+                                                onChange={handleProfileChange}
+                                                className="pl-10"
+                                                disabled={loading}
                                             />
                                         </div>
                                     </div>
@@ -182,10 +246,11 @@ export default function AccountPage() {
                                                 id="phone"
                                                 name="phone"
                                                 type="tel"
-                                                placeholder="0123456789"
+                                                placeholder="0912345678"
                                                 value={userData.phone}
                                                 onChange={handleProfileChange}
                                                 className="pl-10"
+                                                disabled={loading}
                                             />
                                         </div>
                                     </div>
@@ -198,16 +263,17 @@ export default function AccountPage() {
                                             <Textarea
                                                 id="address"
                                                 name="address"
-                                                placeholder="Nhập địa chỉ của bạn"
+                                                placeholder="123 Đường ABC, Phường XYZ, Quận 1, TP. Hồ Chí Minh"
                                                 value={userData.address}
-                                                onChange={(e) => setUserData((prev) => ({ ...prev, address: e.target.value }))}
+                                                onChange={handleProfileChange}
                                                 className="pl-10 min-h-[80px]"
+                                                disabled={loading}
                                             />
                                         </div>
                                     </div>
 
-                                    <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" size="lg">
-                                        <Save className="w-4 h-4 mr-2" /> Lưu thay đổi
+                                    <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" size="lg" disabled={loading}>
+                                        <Save className="w-4 h-4 mr-2" /> {loading ? 'Đang lưu...' : 'Lưu thay đổi'}
                                     </Button>
                                 </form>
                             </TabsContent>
@@ -228,6 +294,7 @@ export default function AccountPage() {
                                                 onChange={handlePasswordChange}
                                                 className="pl-10 pr-10"
                                                 required
+                                                disabled={loading}
                                             />
                                             <Button
                                                 type="button"
@@ -259,6 +326,7 @@ export default function AccountPage() {
                                                 onChange={handlePasswordChange}
                                                 className="pl-10 pr-10"
                                                 required
+                                                disabled={loading}
                                             />
                                             <Button
                                                 type="button"
@@ -290,6 +358,7 @@ export default function AccountPage() {
                                                 onChange={handlePasswordChange}
                                                 className="pl-10 pr-10"
                                                 required
+                                                disabled={loading}
                                             />
                                             <Button
                                                 type="button"
@@ -307,8 +376,8 @@ export default function AccountPage() {
                                         </div>
                                     </div>
 
-                                    <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" size="lg">
-                                        <Save className="w-4 h-4 mr-2" /> Đổi mật khẩu
+                                    <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" size="lg" disabled={loading}>
+                                        <Save className="w-4 h-4 mr-2" /> {loading ? 'Đang đổi...' : 'Đổi mật khẩu'}
                                     </Button>
                                 </form>
                             </TabsContent>

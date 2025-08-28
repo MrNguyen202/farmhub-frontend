@@ -14,9 +14,11 @@ import React, { useState } from "react";
 import MenuMobile from "./menu-mobile";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { user, logout } = useAuth();
 
     return (
         <header className="flex flex-col items-center shadow-sm">
@@ -89,18 +91,28 @@ export function Header() {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem asChild>
-                                    <Link href="/auth/login"><LogIn /> Đăng nhập</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/auth/register"><NotebookPen /> Đăng ký</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/account"><UserRoundPen /> Tài khoản</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/orders"><Truck /> Đơn hàng</Link>
-                                </DropdownMenuItem>
+                                {user !== null ? (
+                                    <>
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/account"><UserRoundPen /> Tài khoản</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/orders"><Truck /> Đơn hàng</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={logout}> {/* Gọi logout trực tiếp */}
+                                            <LogIn /> Đăng xuất
+                                        </DropdownMenuItem>
+                                    </>
+                                ) : (
+                                    <>
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/auth/login"><LogIn /> Đăng nhập</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/auth/register"><NotebookPen /> Đăng ký</Link>
+                                        </DropdownMenuItem>
+                                    </>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -140,7 +152,7 @@ export function Header() {
                                 {/* Main navigation */}
                                 <div className="normal-case absolute top-full left-0 w-screen max-w-xs bg-white shadow-2xl border-t-2 border-green-500 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                                     <div className="grid grid-cols-1 gap-0">
-                                        {categories.slice(0, 6).map((category) => (
+                                        {categories.map((category) => (
                                             <div
                                                 key={category.slug}
                                                 className="relative group/sub px-4 pt-4 border-r border-b border-gray-200 last:border-r-0 hover:bg-green-100 transition-colors"

@@ -32,7 +32,7 @@ export const products = [
     {
         id: 4,
         name: 'Máy cày mini',
-        image: 'https://picsum.photos',
+        image: 'https://picsum.photos/204',
         description: 'Máy cày mini tiện lợi, giúp làm đất nhanh chóng và hiệu quả.',
         price: 2500000,
         rating: 4.7,

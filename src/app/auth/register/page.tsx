@@ -11,10 +11,12 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft, Facebook, Chrome } from "lucide-react"
+import { toast } from "react-toastify"
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
+    const router = useRouter()
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [formData, setFormData] = useState({
@@ -23,36 +25,11 @@ export default function RegisterPage() {
         phone: "",
         password: "",
         confirmPassword: "",
-        province: "",
-        district: "",
+        address: "",
         agreeTerms: false,
-        receiveNews: false,
     })
     const [isLoading, setIsLoading] = useState(false)
     const [errors, setErrors] = useState<Record<string, string>>({})
-
-    const provinces = [
-        "Hà Nội",
-        "TP. Hồ Chí Minh",
-        "Đà Nẵng",
-        "Hải Phòng",
-        "Cần Thơ",
-        "An Giang",
-        "Bà Rịa - Vũng Tàu",
-        "Bắc Giang",
-        "Bắc Kạn",
-        "Bạc Liêu",
-        "Bắc Ninh",
-        "Bến Tre",
-        "Bình Định",
-        "Bình Dương",
-        "Bình Phước",
-        "Bình Thuận",
-        "Cà Mau",
-        "Cao Bằng",
-        "Đắk Lắk",
-        "Đắk Nông",
-    ]
 
     const validateForm = () => {
         const newErrors: Record<string, string> = {}
@@ -100,11 +77,51 @@ export default function RegisterPage() {
 
         setIsLoading(true)
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 2000))
+        try {
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            })
 
-        console.log("Register data:", formData)
-        setIsLoading(false)
+            const data = await response.json()
+
+            if (response.ok) {
+                // Handle successful registration
+                toast.success("Đăng ký thành công!")
+                // Clear form data
+                setFormData({
+                    fullName: "",
+                    email: "",
+                    phone: "",
+                    password: "",
+                    confirmPassword: "",
+                    address: "",
+                    agreeTerms: false,
+                })
+                // Redirect to login page
+                setTimeout(() => {
+                    router.push("/auth/login")
+                }, 1500)
+            } else {
+                // Handle errors from the server
+                toast.error(data.error || "Đăng ký không thành công, vui lòng thử lại.")
+
+                // If it's a validation error, you could set specific field errors
+                if (data.error.includes("Email")) {
+                    setErrors(prev => ({ ...prev, email: data.error }))
+                } else if (data.error.includes("điện thoại")) {
+                    setErrors(prev => ({ ...prev, phone: data.error }))
+                }
+            }
+        } catch (error) {
+            console.error("Registration error:", error)
+            toast.error("Không thể kết nối đến server. Vui lòng thử lại sau.")
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,6 +132,21 @@ export default function RegisterPage() {
         }))
 
         // Clear error when user starts typing
+        if (errors[name]) {
+            setErrors((prev) => ({
+                ...prev,
+                [name]: "",
+            }))
+        }
+    }
+
+    const handleCheckboxChange = (name: string, checked: boolean) => {
+        setFormData((prev) => ({
+            ...prev,
+            [name]: checked,
+        }))
+
+        // Clear error when user changes checkbox
         if (errors[name]) {
             setErrors((prev) => ({
                 ...prev,
@@ -187,6 +219,7 @@ export default function RegisterPage() {
                                             onChange={handleInputChange}
                                             className="pl-10"
                                             required
+                                            disabled={isLoading}
                                         />
                                     </div>
                                     {errors.fullName && <p className="text-sm text-red-500">{errors.fullName}</p>}
@@ -206,6 +239,7 @@ export default function RegisterPage() {
                                             onChange={handleInputChange}
                                             className="pl-10"
                                             required
+                                            disabled={isLoading}
                                         />
                                     </div>
                                     {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
@@ -225,42 +259,24 @@ export default function RegisterPage() {
                                             onChange={handleInputChange}
                                             className="pl-10"
                                             required
+                                            disabled={isLoading}
                                         />
                                     </div>
                                     {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
                                 </div>
 
                                 {/* Location */}
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="province">Tỉnh/Thành phố</Label>
-                                        <Select
-                                            value={formData.province}
-                                            onValueChange={(value: string) => setFormData((prev) => ({ ...prev, province: value }))}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Chọn tỉnh" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {provinces.map((province) => (
-                                                    <SelectItem key={province} value={province}>
-                                                        {province}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="district">Quận/Huyện</Label>
-                                        <Input
-                                            id="district"
-                                            name="district"
-                                            type="text"
-                                            placeholder="Quận/Huyện"
-                                            value={formData.district}
-                                            onChange={handleInputChange}
-                                        />
-                                    </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="address">Địa chỉ</Label>
+                                    <Input
+                                        id="address"
+                                        name="address"
+                                        type="text"
+                                        placeholder="Nhập đầy đủ địa chỉ (ví dụ: 123 Lê Lợi, Quận 1, TP. HCM)"
+                                        value={formData.address || ""}
+                                        onChange={handleInputChange}
+                                        disabled={isLoading}
+                                    />
                                 </div>
 
                                 {/* Password */}
@@ -277,6 +293,7 @@ export default function RegisterPage() {
                                             onChange={handleInputChange}
                                             className="pl-10 pr-10"
                                             required
+                                            disabled={isLoading}
                                         />
                                         <Button
                                             type="button"
@@ -284,6 +301,7 @@ export default function RegisterPage() {
                                             size="sm"
                                             className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                                             onClick={() => setShowPassword(!showPassword)}
+                                            disabled={isLoading}
                                         >
                                             {showPassword ? (
                                                 <EyeOff className="h-4 w-4 text-gray-400" />
@@ -309,6 +327,7 @@ export default function RegisterPage() {
                                             onChange={handleInputChange}
                                             className="pl-10 pr-10"
                                             required
+                                            disabled={isLoading}
                                         />
                                         <Button
                                             type="button"
@@ -316,6 +335,7 @@ export default function RegisterPage() {
                                             size="sm"
                                             className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            disabled={isLoading}
                                         >
                                             {showConfirmPassword ? (
                                                 <EyeOff className="h-4 w-4 text-gray-400" />
@@ -334,8 +354,9 @@ export default function RegisterPage() {
                                             id="agreeTerms"
                                             checked={formData.agreeTerms}
                                             onCheckedChange={(checked) =>
-                                                setFormData((prev) => ({ ...prev, agreeTerms: checked as boolean }))
+                                                handleCheckboxChange("agreeTerms", checked as boolean)
                                             }
+                                            disabled={isLoading}
                                         />
                                         <Label htmlFor="agreeTerms" className="text-sm leading-5">
                                             Tôi đồng ý với{" "}
@@ -349,23 +370,15 @@ export default function RegisterPage() {
                                         </Label>
                                     </div>
                                     {errors.agreeTerms && <p className="text-sm text-red-500">{errors.agreeTerms}</p>}
-
-                                    <div className="flex items-center space-x-2">
-                                        <Checkbox
-                                            id="receiveNews"
-                                            checked={formData.receiveNews}
-                                            onCheckedChange={(checked) =>
-                                                setFormData((prev) => ({ ...prev, receiveNews: checked as boolean }))
-                                            }
-                                        />
-                                        <Label htmlFor="receiveNews" className="text-sm">
-                                            Nhận thông tin khuyến mãi và tin tức nông nghiệp
-                                        </Label>
-                                    </div>
                                 </div>
 
                                 {/* Submit Button */}
-                                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" size="lg" disabled={isLoading}>
+                                <Button
+                                    type="submit"
+                                    className="w-full bg-green-600 hover:bg-green-700"
+                                    size="lg"
+                                    disabled={isLoading}
+                                >
                                     {isLoading ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
                                 </Button>
                             </form>
@@ -382,11 +395,11 @@ export default function RegisterPage() {
 
                             {/* Social Register */}
                             <div className="grid grid-cols-2 gap-3">
-                                <Button variant="outline" className="w-full bg-transparent">
+                                <Button variant="outline" className="w-full bg-transparent" disabled={isLoading}>
                                     <Facebook className="w-4 h-4 mr-2 text-blue-600" />
                                     Facebook
                                 </Button>
-                                <Button variant="outline" className="w-full bg-transparent">
+                                <Button variant="outline" className="w-full bg-transparent" disabled={isLoading}>
                                     <Chrome className="w-4 h-4 mr-2" />
                                     Google
                                 </Button>
