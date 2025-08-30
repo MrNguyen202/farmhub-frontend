@@ -119,12 +119,12 @@ export default function AccountPage() {
                     newPassword: passwordData.newPassword,
                 }),
             })
+
             const data = await response.json()
             if (response.ok) {
                 toast.success("Cập nhật thành công! Mật khẩu của bạn đã được thay đổi.")
                 setPasswordData({ currentPassword: "", newPassword: "", confirmNewPassword: "" }) // Clear fields
-                await logout() // Đăng xuất để yêu cầu đăng nhập lại
-                router.push('/auth/login')
+                await refreshUser() // Refresh user từ AuthContext để cập nhật state
             } else {
                 toast.error(data.error || "Đã có lỗi khi đổi mật khẩu.")
             }

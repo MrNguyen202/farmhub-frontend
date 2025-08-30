@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectToDatabase } from '@/config/database'
 import { RowDataPacket } from 'mysql2'
-import { SignJWT } from 'jose'
+import { comparePassword, generateToken } from '@/lib/auth'
 
 // Interface for user data
 interface User extends RowDataPacket {
@@ -13,6 +13,7 @@ interface User extends RowDataPacket {
     address: string
     avatar_url: string | null
     created_at: Date
+    updated_at: Date
 }
 
 // Simple validation function
@@ -30,15 +31,6 @@ const validateLoginData = (data: { email: string; password: string }) => {
     }
 
     return errors
-}
-
-// Simple hash function (same as register)
-const simpleHash = async (password: string): Promise<string> => {
-    const encoder = new TextEncoder()
-    const data = encoder.encode(password + 'your-secret-salt')
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
 // Database function to find user by email
@@ -69,25 +61,6 @@ const updateLastLogin = async (userId: number) => {
     }
 }
 
-// Generate JWT token
-const generateToken = async (user: User) => {
-    const secret = new TextEncoder().encode(
-        process.env.JWT_SECRET || 'your-jwt-secret-key'
-    )
-
-    const token = await new SignJWT({
-        userId: user.id,
-        email: user.email,
-        fullName: user.full_name
-    })
-        .setProtectedHeader({ alg: 'HS256' })
-        .setIssuedAt()
-        .setExpirationTime('7d') // Token expires in 7 days
-        .sign(secret)
-
-    return token
-}
-
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
@@ -115,8 +88,8 @@ export async function POST(request: NextRequest) {
         }
 
         // Verify password
-        const hashedPassword = await simpleHash(password)
-        if (hashedPassword !== user.password) {
+        const isPasswordValid = await comparePassword(password, user.password)
+        if (!isPasswordValid) {
             return NextResponse.json(
                 { error: 'Email hoặc mật khẩu không đúng' },
                 { status: 401 }
@@ -137,7 +110,8 @@ export async function POST(request: NextRequest) {
             phone: user.phone,
             address: user.address,
             avatar_url: user.avatar_url,
-            created_at: user.created_at
+            created_at: user.created_at,
+            updated_at: user.updated_at
         }
 
         // Create response with token

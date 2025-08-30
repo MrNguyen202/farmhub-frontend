@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectToDatabase } from '@/config/database' // Adjust path as needed
 import { ResultSetHeader, RowDataPacket } from 'mysql2'
+import { simpleHash } from '@/lib/auth'
 
 // Interface for user data
 interface User extends RowDataPacket {
@@ -61,15 +62,6 @@ const validateRegistrationData = (data: UserData & { password: string; confirmPa
     return errors
 }
 
-// Simple hash function (for demo - use bcrypt in production)
-const simpleHash = async (password: string): Promise<string> => {
-    const encoder = new TextEncoder()
-    const data = encoder.encode(password + 'your-secret-salt')
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
-}
-
 // Database functions
 const findUserByEmail = async (email: string): Promise<User | null> => {
     try {
@@ -107,13 +99,14 @@ const createUser = async (userData: UserData): Promise<{
     address: string;
     avatar_url: string | null;
     createdAt: Date;
+    updatedAt: Date;
 }> => {
     try {
         const connection = await connectToDatabase();
 
         const [result] = await connection.execute(
-            `INSERT INTO users (full_name, email, phone, password, address, avatar_url, created_at) 
-             VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+            `INSERT INTO users (full_name, email, phone, password, address, avatar_url, created_at, updated_at) 
+             VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`,
             [
                 userData.fullName,
                 userData.email,
@@ -132,6 +125,7 @@ const createUser = async (userData: UserData): Promise<{
             address: userData.address,
             avatar_url: userData.avatar_url || null,
             createdAt: new Date(),
+            updatedAt: new Date(),
         };
     } catch (error) {
         console.error('Error creating user:', error);
@@ -196,6 +190,7 @@ export async function POST(request: NextRequest) {
                     address: newUser.address,
                     avatar_url: newUser.avatar_url,
                     createdAt: newUser.createdAt,
+                    updatedAt: newUser.updatedAt,
                 }
             },
             { status: 201 }

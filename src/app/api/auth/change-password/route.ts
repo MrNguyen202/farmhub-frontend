@@ -1,20 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/config/database';
-import { RowDataPacket } from 'mysql2';
 import { comparePassword, getUserFromRequest, simpleHash } from '@/lib/auth';
 import { generateToken } from '@/lib/auth';
 
-interface User extends RowDataPacket {
-    id: number;
-    email: string;
-    password: string;
-}
-
-const findUserById = async (userId: number): Promise<User | null> => {
+const findUserById = async (userId: number): Promise<any | null> => {
     try {
         const connection = await connectToDatabase();
-        const [rows] = await connection.execute('SELECT id, email, password FROM users WHERE id = ? LIMIT 1', [userId]);
-        return (rows as User[]).length > 0 ? (rows as User[])[0] : null;
+        const [rows] = await connection.execute(
+            'SELECT id, email, password, full_name, phone, address, avatar_url, created_at, updated_at FROM users WHERE id = ? LIMIT 1',
+            [userId]
+        );
+        return (rows as any[]).length > 0 ? (rows as any[])[0] : null;
     } catch (error) {
         console.error('Error finding user by ID:', error);
         throw new Error('Database error');
@@ -61,8 +57,16 @@ export async function POST(request: NextRequest) {
             hashedNewPassword,
             user.id,
         ]);
-        const newToken = await generateToken({ id: user.id, email: user.email });
-        const response = NextResponse.json({ message: 'Đổi mật khẩu thành công.' }, { status: 200 });
+
+        // Lấy thông tin người dùng đã cập nhật
+        const updatedUser = await findUserById(user.id);
+        if (!updatedUser) {
+            return NextResponse.json({ error: 'Người dùng không tồn tại.' }, { status: 404 });
+        }
+
+        // Tạo token mới
+        const newToken = await generateToken(user);
+        const response = NextResponse.json({ message: 'Đổi mật khẩu thành công.', user: updatedUser }, { status: 200 });
         response.cookies.set('auth-token', newToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',

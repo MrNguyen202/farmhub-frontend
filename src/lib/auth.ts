@@ -1,11 +1,24 @@
 import { jwtVerify, SignJWT } from 'jose'
 import { NextRequest } from 'next/server'
+import { RowDataPacket } from 'mysql2'
 import bcrypt from 'bcrypt';
 
 export interface UserPayload {
     userId: number
     email: string
     fullName: string
+}
+
+export interface User extends RowDataPacket {
+    id: number
+    full_name: string
+    email: string
+    phone: string
+    password: string
+    address: string
+    avatar_url: string | null
+    created_at: Date
+    updated_at: Date
 }
 
 export const verifyToken = async (token: string): Promise<UserPayload | null> => {
@@ -62,11 +75,19 @@ export const comparePassword = async (password: string, hashedPassword: string):
     return await bcrypt.compare(password, hashedPassword);
 };
 
-export const generateToken = async (user: { id: number; email: string }): Promise<string> => {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'your-jwt-secret-key');
-    return await new SignJWT({ userId: user.id, email: user.email })
+export const generateToken = async (user: User) => {
+    const secret = new TextEncoder().encode(
+        process.env.JWT_SECRET || 'your-jwt-secret-key'
+    )
+
+    const token = await new SignJWT({
+        userId: user.id,
+        email: user.email,
+        fullName: user.full_name
+    })
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
-        .setExpirationTime('7d')
-        .sign(secret);
+        .setExpirationTime('7d') // Token expires in 7 days
+        .sign(secret)
+    return token
 };
