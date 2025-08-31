@@ -2,7 +2,6 @@
 
 import CarouselBanner from '@/app/_components/carousel-banner';
 import { Phone, Shield, Truck } from 'lucide-react';
-import categories from '@/datalocals/categories';
 import { products } from '@/datalocals/product';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,9 +11,48 @@ import Rating from '@mui/material/Rating';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import { motion } from "framer-motion";
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+
+interface Category {
+  id: number;
+  name: string;
+  description: string | null;
+  label: string;
+  slug: string;
+  images: string[];
+  icon: string;
+  createdAt: Date;
+  numberOfProducts: number;
+}
 
 
 export default function HomePage() {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/category');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        // Access the 'categories' array from the API response
+        setCategories(data.categories || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Log categories when they change
+  useEffect(() => {
+    console.log('Categories:', categories);
+  }, [categories]);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -118,7 +156,7 @@ export default function HomePage() {
                         {/* Ảnh nền */}
                         <div
                           className="absolute inset-0 bg-cover bg-center"
-                          style={{ backgroundImage: `url(${category.image})` || "/placeholder.svg" }}
+                          style={{ backgroundImage: `url(${category.images[0]})` || "/placeholder.svg" }}
                           onError={(e) => {
                             e.currentTarget.onerror = null
                             e.currentTarget.style.backgroundImage = 'url(/placeholder.svg)'

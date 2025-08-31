@@ -12,6 +12,7 @@ interface User extends RowDataPacket {
     password: string
     address: string
     avatar_url: string | null
+    role: 'admin' | 'user'
     createdAt: Date
     updatedAt: Date
 }
@@ -23,6 +24,7 @@ interface UserData {
     hashedPassword: string;
     address: string;
     avatar_url?: string | null;
+    role: 'admin' | 'user';
 }
 
 // Simple validation function
@@ -98,6 +100,7 @@ const createUser = async (userData: UserData): Promise<{
     phone: string;
     address: string;
     avatar_url: string | null;
+    role: 'admin' | 'user';
     createdAt: Date;
     updatedAt: Date;
 }> => {
@@ -105,8 +108,8 @@ const createUser = async (userData: UserData): Promise<{
         const connection = await connectToDatabase();
 
         const [result] = await connection.execute(
-            `INSERT INTO users (full_name, email, phone, password, address, avatar_url, created_at, updated_at) 
-             VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())`,
+            `INSERT INTO users (full_name, email, phone, password, address, avatar_url, role, created_at, updated_at) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
             [
                 userData.fullName,
                 userData.email,
@@ -114,6 +117,7 @@ const createUser = async (userData: UserData): Promise<{
                 userData.hashedPassword,
                 userData.address,
                 userData.avatar_url || null,
+                userData.role,
             ]
         ) as [ResultSetHeader];
 
@@ -124,6 +128,7 @@ const createUser = async (userData: UserData): Promise<{
             phone: userData.phone,
             address: userData.address,
             avatar_url: userData.avatar_url || null,
+            role: userData.role,
             createdAt: new Date(),
             updatedAt: new Date(),
         };
@@ -177,6 +182,7 @@ export async function POST(request: NextRequest) {
             hashedPassword,
             address: address || '',
             avatar_url: null, // Default null for avatar
+            role: 'user', // Default role
         })
 
         return NextResponse.json(

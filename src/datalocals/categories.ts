@@ -340,7 +340,7 @@ const categories = [
     {
         id: 5,
         name: 'Thiết bị nông nghiệp',
-        label: 'Thiết bị',
+        label: 'Thiết bị nông nghiệp',
         slug: 'thiet-bi',
         image: '/images/thiet-bi-may-moc.jpg',
         icon: '/icons/thiet-bi.webp',

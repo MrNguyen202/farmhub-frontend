@@ -9,16 +9,41 @@ import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Input } from "../../components/ui/input"
 import Link from "next/link";
-import categories from "@/datalocals/categories";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MenuMobile from "./menu-mobile";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
+type CategoryType = {
+    slug: string;
+    icon?: string;
+    label: string;
+    name: string;
+    subCategories: {
+        slug: string;
+        name: string;
+        types: {
+            slug: string;
+            name: string;
+        }[];
+    }[];
+};
+
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { user, logout } = useAuth();
+    const [categories, setCategories] = useState<CategoryType[]>([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const response = await fetch('/api/category/all');
+            const data = await response.json();
+            setCategories(data.categories);
+        };
+
+        fetchCategories();
+    }, []);
 
     return (
         <header className="flex flex-col items-center shadow-sm">

@@ -21,7 +21,7 @@ export default function AccountPage() {
     const [showNewPassword, setShowNewPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    const { user, logout, refreshUser } = useAuth() // Lấy user từ AuthContext
+    const { user, refreshUser } = useAuth() // Lấy user từ AuthContext
     const router = useRouter()
     const [loading, setLoading] = useState(false) // Thêm state loading cho form
 
